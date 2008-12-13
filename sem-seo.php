@@ -5,7 +5,7 @@ Plugin URI: http://www.semiologic.com/software/marketing/sem-seo/
 Description: All in one SEO plugin for WordPress
 Author: Denis de Bernardy
 Version: 1.3
-Author URI: http://www.semiologic.com
+Author URI: http://www.getsemiologic.com
 Update Service: http://version.semiologic.com/wordpress
 Update Tag: sem_seo
 Update Package: http://www.semiologic.com/media/software/marketing/sem-seo/sem-seo.zip
