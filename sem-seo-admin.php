@@ -278,6 +278,10 @@ EOF;
 
 	function save_entry($post_ID)
 	{
+		$post = get_post($post_ID);
+		
+		if ( $post->post_type == 'revision' ) return;
+		
 		if ( current_user_can('manage_options') )
 		{
 			foreach ( array_keys(sem_seo_admin::get_fields()) as $field )
