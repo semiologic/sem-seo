@@ -4,7 +4,7 @@ Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/marketing/sem-seo/
 Description: All in one SEO plugin for WordPress
 Author: Denis de Bernardy
-Version: 1.3
+Version: 1.3.1 alpha
 Author URI: http://www.getsemiologic.com
 Update Service: http://version.semiologic.com/plugins
 Update Tag: sem_seo
@@ -38,8 +38,7 @@ class sem_seo
 		add_action('template_redirect', array('sem_seo', 'redirect'), 1000000);
 		
 		# page meta
-		if($options['enforce_www_preference'] == true)
-			add_action('init', array('sem_seo', 'enforce_www'));
+		add_action('init', array('sem_seo', 'enforce_www'));
 		
 		# page title
 		add_filter('wp_title', array('sem_seo', 'title'), 20, 2);
@@ -626,7 +625,6 @@ class sem_seo
 				'category_excerpts' => true,
 				'tag_dates' => true,
 				'tag_excerpts' => false,
-				'enforce_www_preference' => false,
 				'keywords' => '',
 				'description' => ''
 				);
