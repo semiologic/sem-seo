@@ -61,7 +61,10 @@ class sem_seo
 		add_filter('query_string', array('sem_seo', 'archives_query_string'), 0);
 		
 		# home link slash pref
-		add_filter('option_home', 'user_trailingslashit');
+		if ( !is_admin() )
+		{
+			add_filter('option_home', 'user_trailingslashit');
+		}
 	} # init()
 	
 	
