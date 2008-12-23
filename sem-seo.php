@@ -65,7 +65,73 @@ class sem_seo
 		{
 			add_filter('option_home', 'user_trailingslashit');
 		}
+		
+		# singular slug
+		add_filter('wp_insert_post_data', array('sem_seo', 'post_slug'), 10, 2);
 	} # init()
+	
+	
+	#
+	# post_slug()
+	#
+	
+	function post_slug($data, $post_arr)
+	{
+		if ( !in_array($data['post_status'], array('publish', 'future'))
+			|| !in_array($data['post_type'], array('post', 'page'))
+			|| !preg_match("/-\d+$/", $data['post_name'])
+			)
+		{
+			return $data;
+		}
+		
+		$wp_post_name = $data['post_name'];
+		$post_name = sanitize_title($data['post_title']);
+		
+		if ( !preg_match("/^$post_name-\d+$/", $wp_post_name) )
+		{
+			# ignore: it was set this way by the user
+			return $data;
+		}
+		
+		global $wpdb;
+		
+		if ( $data['post_type'] == 'page' )
+		{
+			$sql = "
+				SELECT	ID
+				FROM	$wpdb->posts
+				WHERE	post_type = 'page'
+				AND		post_status IN ('publish', 'future')
+				AND		post_parent = " . intval($data['post_parent']) . "
+				AND		post_name = '" . $wpdb->escape($post_name) . "'
+				AND		ID <> " . intval($post_arr['ID']) . "
+				LIMIT 1
+				";
+		}
+		else
+		{
+			$sql = "
+				SELECT	ID
+				FROM	$wpdb->posts
+				WHERE	post_type = 'post'
+				AND		post_status IN ('publish', 'future')
+				AND		CAST(post_date AS DATE) = CAST('" . $wpdb->escape($data['post_date']) . "' AS DATE)
+				AND		post_name = '" . $wpdb->escape($post_name) . "'
+				AND		ID <> " . intval($post_arr['ID']) . "
+				LIMIT 1
+				";
+		}
+		
+		$change = !$wpdb->get_var($sql);
+		
+		if ( $change )
+		{
+			$data['post_name'] = $post_name;
+		}
+		
+		return $data;
+	} # post_slug()
 	
 	
 	#
