@@ -71,7 +71,7 @@ class sem_seo
 	
 	function redirect()
 	{
-		if ( is_front_page() && !is_paged() )
+		if ( is_front_page() && !is_paged() && !is_robots() )
 		{
 			$home_url = get_option('home');
 			$home_path = parse_url($home_url);
