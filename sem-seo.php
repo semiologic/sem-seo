@@ -354,6 +354,8 @@ class sem_seo
 				$exclude[] = highlights_cat_id;
 			}
 			
+			if ( !$wp_query->posts ) return $keywords;
+			
 			foreach ( $wp_query->posts as $post )
 			{
 				if ( $cats = get_the_category($post->ID) )
