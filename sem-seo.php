@@ -60,25 +60,9 @@ class sem_seo
 		add_action('loop_start', array('sem_seo', 'archives_begin'), 1000);
 		add_filter('query_string', array('sem_seo', 'archives_query_string'), 0);
 		
-		# home link slash pref
-		if ( !is_admin() )
-		{
-			#add_filter('option_home', array('sem_seo', 'slashit'), 1000);
-		}
-		
 		# singular slug
 		add_filter('wp_insert_post_data', array('sem_seo', 'post_slug'), 10, 2);
 	} # init()
-	
-	
-	#
-	# slashit()
-	#
-	
-	function slashit($url)
-	{
-		return user_trailingslashit($url);
-	} # slashit()
 	
 	
 	#
