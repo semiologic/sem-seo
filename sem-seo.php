@@ -136,7 +136,7 @@ class sem_seo
 	{
 		if ( is_front_page() && !is_paged() && !is_robots() )
 		{
-			$home_url = get_option('home');
+			$home_url = user_trailingslashit(get_option('home'));
 			$home_path = parse_url($home_url);
 			$home_path = $home_path['path'];
 			$request_path = parse_url($_SERVER['REQUEST_URI']);
