@@ -63,12 +63,22 @@ class sem_seo
 		# home link slash pref
 		if ( !is_admin() )
 		{
-			add_filter('option_home', 'user_trailingslashit');
+			#add_filter('option_home', array('sem_seo', 'slashit'), 1000);
 		}
 		
 		# singular slug
 		add_filter('wp_insert_post_data', array('sem_seo', 'post_slug'), 10, 2);
 	} # init()
+	
+	
+	#
+	# slashit()
+	#
+	
+	function slashit($url)
+	{
+		return user_trailingslashit($url);
+	} # slashit()
 	
 	
 	#
