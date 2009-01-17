@@ -4,7 +4,7 @@ Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/marketing/sem-seo/
 Description: All in one SEO plugin for WordPress
 Author: Denis de Bernardy
-Version: 1.4
+Version: 1.4.1 alpha
 Author URI: http://www.getsemiologic.com
 Update Service: http://version.semiologic.com/plugins
 Update Tag: sem_seo
@@ -702,34 +702,28 @@ class sem_seo
 		
 		return $o;
 	} # get_options()
+	
 
 	#
-	# get_options()
+	# enforce_www()
 	#
 
-/*
-Enforce <code>www.</code> Preference Version: 1.3
-http://txfx.net/code/wordpress/enforce-www-preference/
-Provides 301 redirects to queries with <strong>/index.php</strong> and enforces your use or non-use of <strong>www.</strong>
-by Mark Jaquith (http://txfx.net/)
-*/
 	function enforce_www()
-	{	
-		if ( $_SERVER['REQUEST_URI'] == str_replace('http://' . $_SERVER['HTTP_HOST'], '', get_bloginfo('home')) . '/index.php' ) 
+	{
+		if ( strpos($_SERVER['HTTP_HOST'], 'www.') === 0
+			&& strpos(get_option('siteurl'), '://www.') === false
+		 	|| strpos($_SERVER['HTTP_HOST'], 'www.') === false
+			&& strpos(get_option('siteurl'), '://www.') !== false
+			)
 		{
-			wp_redirect(get_bloginfo('home') . '/', 301);
-			exit();
-		}
-
-		if ( strpos($_SERVER['HTTP_HOST'], 'www.') === 0  && strpos(get_bloginfo('home'), 'http://www.') === false ) 
-		{
-			wp_redirect( 'http://' . substr($_SERVER['HTTP_HOST'], 4) . $_SERVER['REQUEST_URI'], 301);
-			exit();
-		} 
-		elseif ( strpos($_SERVER['HTTP_HOST'], 'www.') !== 0 && strpos(get_bloginfo('home'), 'http://www.') === 0 ) 
-		{
-			wp_redirect('http://www.' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
-			exit();
+			$root = get_option('home');
+			
+			preg_match("|(.+://[^/]+)|", $root, $root);
+			
+			$root = end($root);
+			
+			wp_redirect($root . $_SERVER['REQUEST_URI'], 301);
+			die;
 		}
 	} # enforce_www()
 } # sem_seo
