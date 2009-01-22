@@ -8,23 +8,9 @@ class sem_seo_admin
 	
 	function init()
 	{
-		add_filter('sem_api_key_protected', array('sem_seo_admin', 'sem_api_key_protected'));
-
 		add_action('admin_menu', array('sem_seo_admin', 'admin_menu'));
 		add_action('admin_menu', array('sem_seo_admin', 'meta_boxes'), 30);
 	} # init()
-
-
-	#
-	# sem_api_key_protected()
-	#
-	
-	function sem_api_key_protected($array)
-	{
-		$array[] = 'http://www.semiologic.com/media/software/marketing/sem-seo/sem-seo.zip';
-		
-		return $array;
-	} # sem_api_key_protected()
 	
 	
 	#
