@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/marketing/sem-seo/
 Description: All in one SEO plugin for WordPress
-Version: 1.4.1 RC
+Version: 1.4.1
 Author: Denis de Bernardy
 Author URI: http://www.getsemiologic.com
 Update Package: https://members.semiologic.com/media/plugins/sem-seo/sem-seo.zip
