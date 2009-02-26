@@ -141,18 +141,7 @@ class sem_seo
 			
 			if ( rtrim($request_path, '/') != rtrim($home_path, '/') )
 			{
-				header('HTTP/1.1 301 Moved Permanently');
-				header('Status: 301 Moved Permanently');
-				
-				global $is_IIS;
-				if ( $is_IIS )
-				{
-					header("Refresh: 0;url=$home_url");
-				}
-				else
-				{
-					header("Location: $home_url");
-				}
+				wp_redirect($home_url, 301);
 				die;
 			}
 		}
