@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Semiologic SEO
-Plugin URI: http://www.semiologic.com/software/marketing/sem-seo/
+Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: All in one SEO plugin for WordPress
 Version: 1.4.2 alpha
 Author: Denis de Bernardy
