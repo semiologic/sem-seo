@@ -634,7 +634,7 @@ class sem_seo
 
 				echo '</a>';
 
-				edit_post_link(__('Edit'), ' <span class="action admin_link">&bull;&nbsp;', '</span>');
+				edit_post_link(__('Edit'), ' <span class="admin_link">&bull;&nbsp;', '</span>');
 				
 				if ( $archives_excerpts )
 				{
