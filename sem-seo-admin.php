@@ -325,7 +325,7 @@ EOF
 			'category_excerpts' => array(
 					'label' => 'Category Excerpts',
 					'desc' => <<<EOF
-In archives as lists of posts, display post excerpts in category archives. Important: If you're using more or less the same set of categories for each post on your site, you <b>will</b> have duplicate content issues.
+In archives as lists of posts, display post excerpts in category archives.
 EOF
 					),
 			'tag_dates' => array(
