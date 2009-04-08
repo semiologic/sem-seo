@@ -459,7 +459,8 @@ class sem_seo
 		global $sem_seo_do_archives;
 		global $sem_seo_doing_archives;
 
-		if ( !is_feed() && !is_admin() && !is_home() && ( is_archive() || is_search() )
+		if ( !is_feed() && !is_admin() && !is_home()
+			&& ( is_archive() || is_search() && !class_exists('search_reloaded') )
 			&& $sem_seo_do_archives )
 		{
 			global $wp_query;
@@ -479,7 +480,8 @@ class sem_seo
 		global $sem_seo_do_archives;
 		global $sem_seo_doing_archives;
 
-		if ( !is_feed() && !is_admin() && !is_home() && ( is_archive() || is_search() )
+		if ( !is_feed() && !is_admin() && !is_home()
+			&& ( is_archive() || is_search() && !class_exists('search_reloaded') )
 			&& $sem_seo_do_archives && !$sem_seo_doing_archives )
 		{
 			ob_end_clean();
