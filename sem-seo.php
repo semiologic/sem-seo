@@ -463,8 +463,6 @@ class sem_seo
 			&& ( is_archive() || is_search() && !class_exists('search_reloaded') )
 			&& $sem_seo_do_archives )
 		{
-			global $wp_query;
-
 			ob_start();
 			add_action('loop_end', array('sem_seo', 'archives_end'), -1000);
 		}
@@ -484,11 +482,11 @@ class sem_seo
 			&& ( is_archive() || is_search() && !class_exists('search_reloaded') )
 			&& $sem_seo_do_archives && !$sem_seo_doing_archives )
 		{
-			ob_end_clean();
+			ob_get_clean();
 			
 			$sem_seo_do_archives = false;
 			$sem_seo_doing_archives = true;
-
+			
 			sem_seo::archives();
 
 			$sem_seo_do_archives = true;
@@ -636,7 +634,7 @@ class sem_seo
 
 				echo '</a>';
 
-				edit_post_link(__('Edit'), ' <span class="admin_link edit_entry">&bull;&nbsp;', '</span>');
+				edit_post_link(__('Edit'), ' <span class="admin_link edit_entry">', '</span>');
 				
 				if ( $archives_excerpts )
 				{
