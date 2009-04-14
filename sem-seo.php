@@ -157,6 +157,7 @@ class sem_seo
 		if ( is_feed() ) return $title;
 		
 		global $wp_query;
+		global $sem_captions;
 		
 		$title = trim($title);
 
@@ -203,7 +204,10 @@ class sem_seo
 		}
 		elseif ( is_search() )
 		{
-			$title = __('Search:') . ' ' . implode(' ', $wp_query->query_vars['search_terms']);
+			if ( isset($sem_captions['search_title']) )
+				$title = str_replace('%query%', implode(' ', $wp_query->query_vars['search_terms']), $sem_captions['search_title']);
+			else
+				$title = __('Search:') . ' ' . implode(' ', $wp_query->query_vars['search_terms']);
 		}
 		
 		if ( !$title )
