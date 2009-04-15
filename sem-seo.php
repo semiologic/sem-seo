@@ -568,11 +568,6 @@ class sem_seo
 				|| $options['tag_excerpts'] && is_tag()
 				|| is_search();
 			
-			global $shortcode_tags;
-			
-			$shortcode_tags_backup = $shortcode_tags;
-			$shortcode_tags = array(md5(time()) => array('sem_seo', 'fake_shortcode'));
-			
 			echo '<div class="post_list">' . "\n";
 			
 			if ( !defined('highlights_cat_id') )
@@ -651,20 +646,8 @@ class sem_seo
 			echo '</ul>' . "\n";
 
 			echo '</div>' . "\n";
-			
-			$shortcode_tags = $shortcode_tags_backup;
 		}
 	} # archives()
-	
-	
-	#
-	# fake_shortcode()
-	#
-	
-	function fake_shortcode($att = null, $content = '')
-	{
-		return $content;
-	} # fake_shortcode()
 	
 	
 	#
