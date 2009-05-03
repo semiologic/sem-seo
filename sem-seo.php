@@ -150,7 +150,7 @@ class sem_seo
 	
 	#
 	# title()
-	#   Lightbox stuff&#8230;
+	#
 	
 	function title($title, $sep)
 	{
@@ -161,15 +161,13 @@ class sem_seo
 		
 		$title = trim($title);
 
-		if (!empty($sep))
+		if ( $sep )
 		{
 			if ( strpos($title, $sep) === 0 )
 			{
 				$title = trim(substr($title, strlen($sep), strlen($title)));
 			}
 		}
-		
-		#dump('</title>', $title, $sep);
 		
 		$options = sem_seo::get_options();
 		$site_name = get_option('blogname');
@@ -201,13 +199,6 @@ class sem_seo
 			{
 				$title = $new_title;
 			}
-		}
-		elseif ( is_search() )
-		{
-			if ( isset($sem_captions['search_title']) )
-				$title = str_replace('%query%', implode(' ', $wp_query->query_vars['search_terms']), $sem_captions['search_title']);
-			else
-				$title = __('Search:') . ' ' . implode(' ', $wp_query->query_vars['search_terms']);
 		}
 		
 		if ( !$title )
