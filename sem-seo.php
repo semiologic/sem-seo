@@ -38,7 +38,7 @@ class sem_seo
 		add_action('init', array('sem_seo', 'enforce_www'));
 		
 		# page title
-		add_filter('wp_title', array('sem_seo', 'title'), 20, 2);
+		add_filter('wp_title', array('sem_seo', 'title'), 1000, 2);
 		
 		# page meta
 		add_action('wp_head', array('sem_seo', 'meta'));
