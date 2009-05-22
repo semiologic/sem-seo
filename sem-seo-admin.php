@@ -165,7 +165,7 @@ EOF;
 					. '</th>'
 					. '<td>'
 					. '<input type="text" name="' . $field . '" size="58" style="width: 90%;"'
-					. ' value="' . attribute_escape($options[$field]) . '"'
+					. ' value="' . esc_attr($options[$field]) . '"'
 					. ' />'
 					. $details['desc']
 					. '</td>'
@@ -178,7 +178,7 @@ EOF;
 		
 		echo '<p class="submit">'
 			. '<input type="submit"'
-				. ' value="' . attribute_escape(__('Save Changes')) . '"'
+				. ' value="' . esc_attr(__('Save Changes')) . '"'
 				. ' />'
 			. '</p>' . "\n";
 
@@ -250,7 +250,7 @@ EOF;
 					. '</th>'
 					. '<td>'
 					. '<input type="text" name="meta[' . $field . ']" size="58" style="width: 90%;" tabindex="5"'
-					. ' value="' . attribute_escape($value) . '"'
+					. ' value="' . esc_attr($value) . '"'
 					. ' />'
 					. '</td>'
 					. '</tr>';
