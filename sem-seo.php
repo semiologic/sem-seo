@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: All in one SEO plugin for WordPress
-Version: 1.5 alpha
+Version: 2.0 RC
 Author: Denis de Bernardy
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo-info
@@ -20,684 +20,635 @@ http://www.mesoconcepts.com/license/
 **/
 
 
-class sem_seo
-{
-	#
-	# init()
-	#
-	
-	function init()
-	{
-		$options = get_option('sem_seo');
-		
-		# kill generator tag
-		remove_action('wp_head', 'wp_generator');
-		
-		# redirect static front page
-		add_action('template_redirect', array('sem_seo', 'redirect'), 1000000);
-		
-		# page meta
-		add_action('init', array('sem_seo', 'enforce_www'));
-		
-		# page title
-		add_filter('wp_title', array('sem_seo', 'title'), 1000, 2);
-		
-		# page meta
-		add_action('wp_head', array('sem_seo', 'meta'));
-		
-		# google ad sections
-		add_action('wp_head', array('sem_seo', 'google_wrap'), 0);
-		add_action('loop_start', array('sem_seo', 'google_begin'), -1000);
-		
-		# process archives lists
-		global $sem_seo_do_archives;
-		global $sem_seo_doing_archives;
-		
-		$sem_seo_do_archives = $options['archives'];
-		$sem_seo_doing_archives = false;
+/**
+ * sem_seo
+ *
+ * @package Semiologic SEO
+ **/
 
-		add_action('loop_start', array('sem_seo', 'archives_begin'), 1000);
-		add_filter('query_string', array('sem_seo', 'archives_query_string'), 0);
+add_action('wp', array('sem_seo', 'www_pref'));
+add_action('wp', array('sem_seo', 'home_slash_pref'));
+
+add_filter('wp_title', array('sem_seo', 'wp_title'), 1000, 3);
+add_action('wp_head', array('sem_seo', 'wp_head'), 0);
+
+add_action('wp_head', array('sem_seo', 'ob_google_start'), 10000);
+add_action('loop_start', array('sem_seo', 'google_start'), -10000);
+add_action('loop_end', array('sem_seo', 'google_end'), 10000);
+
+add_filter('query_string', array('sem_seo', 'archive_query_string'), 0);
+add_action('loop_start', array('sem_seo', 'archive_start'), -1000);
+
+add_action('admin_menu', array('sem_seo', 'admin_menu'));
+add_action('admin_menu', array('sem_seo', 'meta_boxes'), 30);
+
+class sem_seo {
+	/**
+	 * archive_query_string()
+	 *
+	 * @return void
+	 **/
+
+	function archive_query_string($query_string) {
+		global $wp_the_query;
+		$o = sem_seo::get_options();
 		
-		# singular slug
-		add_filter('wp_insert_post_data', array('sem_seo', 'post_slug'), 10, 2);
-	} # init()
-	
-	
-	#
-	# post_slug()
-	#
-	
-	function post_slug($data, $post_arr)
-	{
-		if ( !in_array($data['post_status'], array('publish', 'future'))
-			|| !in_array($data['post_type'], array('post', 'page'))
-			|| !preg_match("/-\d+$/", $data['post_name'])
+		$wp_the_query->parse_query($query_string);
+		
+		if ( is_feed() || !is_archive()
+			|| is_category() && !in_array($o['categories'], array('list', 'raw_list'))
+			|| is_tag() && !in_array($o['tags'], array('list', 'raw_list'))
+			|| is_author() && !in_array($o['authors'], array('list', 'raw_list'))
+			|| is_date() && !in_array($o['dates'], array('list', 'raw_list'))
 			)
-		{
-			return $data;
+			return $query_string;
+		
+		parse_str($query_string, $args);
+		
+		if ( !isset($args['posts_per_page']) ) {
+			if ( is_date() )
+				$args['posts_per_page'] = -1;
+			else
+				$args['posts_per_page'] = 20;
 		}
 		
-		$wp_post_name = $data['post_name'];
-		$post_name = sanitize_title($data['post_title']);
+		$query_string = http_build_query($args);
 		
-		if ( !preg_match("/^$post_name-\d+$/", $wp_post_name) )
-		{
-			# ignore: it was set this way by the user
-			return $data;
-		}
-		
-		global $wpdb;
-		
-		if ( $data['post_type'] == 'page' )
-		{
-			$sql = "
-				SELECT	ID
-				FROM	$wpdb->posts
-				WHERE	post_type = 'page'
-				AND		post_status IN ('publish', 'future')
-				AND		post_parent = " . intval($data['post_parent']) . "
-				AND		post_name = '" . $wpdb->escape($post_name) . "'
-				AND		ID <> " . intval($post_arr['ID']) . "
-				LIMIT 1
-				";
-		}
-		else
-		{
-			$sql = "
-				SELECT	ID
-				FROM	$wpdb->posts
-				WHERE	post_type = 'post'
-				AND		post_status IN ('publish', 'future')
-				AND		CAST(post_date AS DATE) = CAST('" . $wpdb->escape($data['post_date']) . "' AS DATE)
-				AND		post_name = '" . $wpdb->escape($post_name) . "'
-				AND		ID <> " . intval($post_arr['ID']) . "
-				LIMIT 1
-				";
-		}
-		
-		$change = !$wpdb->get_var($sql);
-		
-		if ( $change )
-		{
-			$data['post_name'] = $post_name;
-		}
-		
-		return $data;
-	} # post_slug()
+		return $query_string;
+	} # archive_query_string()
 	
 	
-	#
-	# redirect()
-	#
-	
-	function redirect()
-	{
-		if ( is_front_page() && !is_paged() && !is_robots() )
-		{
-			$home_url = user_trailingslashit(get_option('home'));
-			$home_path = parse_url($home_url);
-			$home_path = $home_path['path'];
-			$request_path = parse_url($_SERVER['REQUEST_URI']);
-			$request_path = $request_path['path'];
-			
-			if ( rtrim($request_path, '/') != rtrim($home_path, '/') )
-			{
-				wp_redirect($home_url, 301);
-				die;
-			}
-		}
-	} # redirect()
-	
-	
-	#
-	# title()
-	#
-	
-	function title($title, $sep)
-	{
-		if ( is_feed() ) return $title;
-		
-		global $wp_query;
-		global $sem_captions;
-		
-		$title = trim($title);
+	/**
+	 * archive_start()
+	 *
+	 * @param object &$wp_query
+	 * @return void
+	 **/
 
-		if ( $sep )
-		{
-			if ( strpos($title, $sep) === 0 )
-			{
-				$title = trim(substr($title, strlen($sep), strlen($title)));
-			}
-		}
+	function archive_start(&$wp_query) {
+		global $wp_the_query;
 		
-		$options = sem_seo::get_options();
-		$site_name = get_option('blogname');
-		$add_site_name = $options['add_site_name'];
+		if ( $wp_query !== $wp_the_query )
+			return;
 		
-		if ( is_home() && !is_page() && !$wp_query->is_posts_page )
-		{
-			if ( $new_title = $options['title'] )
-			{
-				$title = $new_title;
-			}
+		remove_action('loop_start', array('sem_seo', 'archive_start'), -1000);
+		
+		if ( is_feed() || !is_archive() )
+			return;
+		
+		$o = sem_seo::get_options();
+		
+		add_action('loop_end', array('sem_seo', 'archive_end'), 1000);
+		
+		if ( is_category() && $o['categories'] == 'excerpts'
+			|| is_tag() && $o['tags'] == 'excerpts'
+			|| is_author() && $o['authors'] == 'excerpts'
+			|| is_date() && $o['dates'] == 'excerpts'
+			|| !is_category() && !is_tag() && !is_author() && !is_date()
+			) {
+			global $wp_filter;
+			global $sem_seo_filter_backup;
+			
+			$sem_seo_filter_backup = $wp_filter['the_content'];
+			unset($wp_filter['the_content']);
+			
+			add_filter('the_content', array('sem_seo', 'archive_excerpts'));
+		} else {
+			ob_start();
 		}
-		elseif ( is_front_page() || $wp_query->is_posts_page )
-		{
-			$post_id = $wp_query->get_queried_object_id();
+	} # archive_start()
+	
+	
+	/**
+	 * archive_end()
+	 *
+	 * @param object &$wp_query
+	 * @return void
+	 **/
 
-			if ( ( $new_title = get_post_meta($post_id, '_title', true) )
-				|| ( $new_title = $options['title'] )
-				)
-			{
-				$title = $new_title;
-			}
-		}
-		elseif ( is_singular() )
-		{
-			$post_id = $wp_query->get_queried_object_id();
+	function archive_end(&$wp_query) {
+		global $wp_the_query;
+		
+		if ( $wp_query !== $wp_the_query )
+			return;
+		
+		remove_action('loop_end', array('sem_seo', 'archive_end'), 1000);
+		
+		$o = sem_seo::get_options();
+		
+		if ( is_category() && $o['categories'] == 'excerpts'
+			|| is_tag() && $o['tags'] == 'excerpts'
+			|| is_author() && $o['authors'] == 'excerpts'
+			|| is_date() && $o['dates'] == 'excerpts'
+			|| !is_category() && !is_tag() && !is_author() && !is_date()
+			) {
+			global $wp_filter;
+			global $sem_seo_filter_backup;
 			
-			if ( ( $new_title = get_post_meta($post_id, '_title', true) ) )
-			{
-				$title = $new_title;
-			}
+			$wp_filter['the_content'] = $sem_seo_filter_backup;
+			
+			return;
+		} else {
+			ob_end_clean();
+			sem_seo::archive_titles();
 		}
-		
-		if ( !$title )
-		{
-			$title = get_option('blogdescription');
-		}
-		
-		if ( $add_site_name )
-		{
-			$title .= ' | ' . $site_name;
-		}
-		
-		return $title;
-	} # title()
+	} # archive_end()
 	
 	
-	#
-	# meta()
-	#
-	
-	function meta()
-	{
-		global $wp_query;
+	/**
+	 * archive_excerpts()
+	 *
+	 * @param $text
+	 * @return $text
+	 **/
 
-		$options = sem_seo::get_options();
+	function archive_excerpts($text) {
+		global $wp_filter;
+		global $sem_seo_filter_backup;
 		
-		$keywords = '';
-		$description = '';
+		$wp_filter['the_content'] = $sem_seo_filter_backup;
 		
-		if ( is_home() && !is_page() && !$wp_query->is_posts_page )
-		{
-			if ( !( $keywords = $options['keywords'] ) )
-			{
-				$keywords = implode(', ', sem_seo::get_keywords());
-			}
-			
-			if ( !( $description = $options['description'] ) )
-			{
-				$description = trim(strip_tags(get_option('blogdescription')));
-			}
-		}
-		elseif ( is_front_page() || $wp_query->is_posts_page )
-		{
-			$post_id = $wp_query->get_queried_object_id();
+		$text = apply_filters('the_excerpt', get_the_excerpt());
+		
+		unset($wp_filter['the_content']);
+		
+		add_filter('the_content', array('sem_seo', 'archive_excerpts'));
+		
+		return $text;
+	} # archive_excerpts()
+	
+	
+	/**
+	 * archive_titles()
+	 *
+	 * @return void
+	 **/
 
-			if ( !( ( $keywords = get_post_meta($post_id, '_keywords', true) )
-					|| ( $keywords = $options['keywords'] )
-					)
-				)
-			{
-				$keywords = implode(', ', sem_seo::get_keywords());
-			}
-			
-			if ( !( ( $description = get_post_meta($post_id, '_description', true) )
-					|| ( $description = $options['description'] )
-					)
-				)
-			{
-				$description = trim(strip_tags(get_option('blogdescription')));
-			}
-		}
-		elseif ( is_singular() )
-		{
-			$post_id = $wp_query->get_queried_object_id();
-			
-			if ( !( $keywords = get_post_meta($post_id, '_keywords', true) ) )
-			{
-				$keywords = implode(', ', sem_seo::get_keywords());
-			}
-			
-			if ( ( $description = get_post_meta($post_id, '_description', true) )
-				|| ( $description = $options['description'] )
-				);
-		}
-		else
-		{
-			if ( !( is_home() && ( $keywords = $options['keywords'] ) ) )
-			{
-				$keywords = implode(', ', sem_seo::get_keywords());
-			}
-			
-			if ( !( is_home() && ( $description = $options['description'] ) )
-			 	&& !( is_category()
-						&& ( $description = trim(strip_tags(
-								get_term_field('description', $GLOBALS['cat'], 'category')
-								))
-						)
-					)
-				)
-			{
-				$description = trim(strip_tags(get_option('blogdescription')));
-			}
-		}
+	function archive_titles() {
+		global $wp_the_query;
+		$o = sem_seo::get_options();
 		
-		if ( $keywords )
-		{
-			echo '<meta name="keywords" content="' . htmlspecialchars($keywords) . '" />' . "\n";
-		}
+		$wp_the_query->rewind_posts();
+		unset($GLOBALS['day'], $GLOBALS['previousday']);
 		
-		if ( $description )
-		{
-			echo '<meta name="description" content="' . htmlspecialchars($description) . '" />' . "\n";
-		}
-	} # meta()
-	
-	
-	#
-	# get_keywords()
-	#
-	
-	function get_keywords()
-	{
-		static $keywords;
-		
-		if ( !isset($keywords) )
-		{
-			global $wp_query;
-			$keywords = array();
-			$exclude = array();
-			
-			if ( defined('main_cat_id') && main_cat_id )
-			{
-				$exclude[] = main_cat_id;
-			}
-			
-			if ( defined('highlights_cat_id') && highlights_cat_id )
-			{
-				$exclude[] = highlights_cat_id;
-			}
-			
-			if ( !$wp_query->posts ) return $keywords;
-			
-			foreach ( $wp_query->posts as $post )
-			{
-				if ( $cats = get_the_category($post->ID) )
-				{
-					foreach ( $cats as $cat )
-					{
-						if ( !in_array($cat->term_id, $exclude) )
-						{
-							$keywords[] = $cat->name;
-						}
-					}
-				}
-
-				if ( $tags = get_the_tags($post->ID) )
-				{
-					foreach ( $tags as $tag )
-					{
-						$keywords[] = $tag->name;
-					}
-				}
-			}
-			
-			$keywords = array_map('strtolower', $keywords);
-			$keywords = array_unique($keywords);
-
-			sort($keywords);
-		}
-		
-		return $keywords;
-	} # get_keywords()
-	
-	
-	#
-	# google_wrap()
-	#
-	
-	function google_wrap()
-	{
-		if ( !is_feed() && !is_admin()  )
-		{
-			$GLOBALS['did_sem_seo'] = false;
-			ob_start(array('sem_seo', 'google_wrap_ob'));
-			add_action('wp_footer', array('sem_seo', 'ob_flush'), 1000000000);
-		}
-	} # google_wrap()
-	
-	
-	#
-	# google_wrap_ob()
-	#
-	
-	function google_wrap_ob($buffer)
-	{
-		$buffer = preg_replace("/
-			<\s*body(?:\s.*?)?\s*>
-			/isx",
-				"$0\n" . '<!-- google_ad_section_start(weight=ignore) -->',
-				$buffer);
-		
-		$GLOBALS['did_sem_seo'] = true;
-		
-		return $buffer;
-	} # google_wrap_ob()
-	
-	
-	#
-	# ob_flush()
-	#
-	
-	function ob_flush()
-	{
-		echo '<!-- google_ad_section_end -->' . "\n";
+		$show_post_date = ( is_category() && $o['categories'] == 'list'
+			|| is_tag() && $o['tags'] == 'list'
+			|| is_author() && $o['authors'] == 'list'
+			|| is_date() && $o['dates'] == 'list'
+			);
 		
 		$i = 0;
 		
-		while ( !$GLOBALS['did_sem_seo'] && $i++ < 100 )
-		{
-			@ob_end_flush();
-		}
-	} # ob_flush()
-	
-	
-	#
-	# google_begin()
-	#
-	
-	function google_begin()
-	{
-		if ( !is_feed() && !is_admin()  )
-		{
-			echo "\n"
-				. '<!-- google_ad_section_end -->' . "\n"
-				. '<!-- google_ad_section_start -->' . "\n";
-			
-			add_action('loop_end', array('sem_seo', 'google_end'), 1000);
-		}
-	} # google_begin()
-	
-	
-	#
-	# google_end()
-	#
-	
-	function google_end()
-	{
-		if ( !is_feed() && !is_admin() )
-		{
-			echo "\n"
-				. '<!-- google_ad_section_end -->' . "\n"
-				. '<!-- google_ad_section_start(weight=ignore) -->' . "\n";
-		}
-	} # google_end()
-	
-	
-	#
-	# archives_begin()
-	#
-	
-	function archives_begin()
-	{
-		global $sem_seo_do_archives;
-		global $sem_seo_doing_archives;
-
-		if ( !is_feed() && !is_admin() && !is_home()
-			&& ( is_archive() || is_search() && !class_exists('search_reloaded') )
-			&& $sem_seo_do_archives )
-		{
-			ob_start();
-			add_action('loop_end', array('sem_seo', 'archives_end'), -1000);
-		}
-	} # archives_begin()
-	
-	
-	#
-	# archives_end()
-	#
-	
-	function archives_end()
-	{
-		global $sem_seo_do_archives;
-		global $sem_seo_doing_archives;
-
-		if ( !is_feed() && !is_admin() && !is_home()
-			&& ( is_archive() || is_search() && !class_exists('search_reloaded') )
-			&& $sem_seo_do_archives && !$sem_seo_doing_archives )
-		{
-			ob_get_clean();
-			
-			$sem_seo_do_archives = false;
-			$sem_seo_doing_archives = true;
-			
-			sem_seo::archives();
-
-			$sem_seo_do_archives = true;
-			$sem_seo_doing_archives = false;
-		}
-	} # archives_end()
-	
-	
-	#
-	# archives_query_string()
-	#
-	
-	function archives_query_string($query_string)
-	{
-		global $sem_seo_do_archives;
+		echo '<div class="post_list">' . "\n";
 		
-		if ( $sem_seo_do_archives )
-		{
-			global $wp_query;
+		while ( $wp_the_query->have_posts() ) {
+			$wp_the_query->the_post();
 			
-			$wp_query->parse_query($query_string);
-
-			if ( !is_feed() && is_archive() )
-			{
-				parse_str($query_string, $args);
-
-				if ( !isset($args['posts_per_page']) )
-				{
-					if ( is_date() )
-					{
-						$args['posts_per_page'] = -1;
-					}
-					else
-					{
-						$args['posts_per_page'] = 20;
-					}
-				}
-
-				$query_string = array();
-
-				foreach ($args as $k => $v)
-				{
-					$query_string[] = $k . '=' . $v;
-				}
-
-				$query_string = implode('&', $query_string);
-				#var_dump($query_string); die;
-			}
-		}
-		
-		return $query_string;
-	} # archives_query_string()
-	
-	
-	#
-	# archives()
-	#
-	
-	function archives()
-	{
-		global $wp_query;
-		$wp_query->rewind_posts();
-		unset($GLOBALS['previousday']);
-		
-		if ( have_posts() )
-		{
-			$i = 0;
-			$options = sem_seo::get_options();
+			$date = false;
+			if ( $show_post_date && ( is_single() || !is_singular() ) )
+				$date = the_date('', '', '', false);
 			
-			$archives_date = is_date()
-				|| $options['category_dates'] && is_category()
-				|| $options['tag_dates'] && is_tag();
+			$title = the_title('', '', false);
 			
-			$archives_excerpts = $options['category_excerpts'] && is_category()
-				|| $options['tag_excerpts'] && is_tag()
-				|| is_search();
+			$permalink = apply_filters('the_permalink', get_permalink());
 			
-			echo '<div class="post_list">' . "\n";
+			$edit_link = get_edit_post_link();
 			
-			if ( !defined('highlights_cat_id') )
-			{
-				global $wpdb;
+			if ( !$title )
+				$title = __('Untitled', 'sem-seo');
+			
+			if ( defined('higlights_cat_id') && in_category(higlights_cat_id) )
+				$title = '<em>' . $title . '</em>';
+			
+			$title = '<a href="' . esc_url($permalink) . '" title="' . esc_attr($title) . '">'
+				. $title
+				. '</a>';
+			
+			if ( $edit_link ) {
+				$edit_link = '<a class="post-edit-link"'
+					. ' href="' . esc_url($edit_link) . '"'
+					. ' title="' . esc_attr(__('Edit', 'sem-reloaded')) . '">'
+					. __('Edit', 'sem-reloaded')
+					. '</a>';
+				$edit_link = apply_filters('edit_post_link', $edit_link, get_the_ID());
 				
-				$highlights_cat_id = $wpdb->get_var("
-					SELECT
-						term_id
-					FROM
-						$wpdb->terms
-					WHERE
-						slug = 'highlights'
-					");
-
-				define('highlights_cat_id', $highlights_cat_id ? intval($highlights_cat_id) : false);
+				$title .= '&nbsp;<span class="edit_entry">'
+					. $edit_link
+					. '</span>' . "\n";
 			}
 			
-			while ( have_posts() )
-			{
-				the_post();
-
-				if ( $archives_date )
-				{
-					$the_date = the_date('', '', '', false);
-
-					if ( $the_date )
-					{
-						if ( $i )
-						{
-							echo '</ul>' . "\n";
-						}
-
-						echo '<h3>' . $the_date . '</h3>' . "\n";
-
-						echo '<ul>' . "\n";
-					}
-				}
-				elseif ( !$i )
-				{
-					echo '<ul>' . "\n";
-				}
-
-				$i++;
-
-				echo '<li>'
-					. '<a href="';
-
-				the_permalink();
-
-				echo '">';
-
-				if ( highlights_cat_id && in_category(highlights_cat_id) )
-				{
-					echo '<em>';
-					the_title();
-					echo '</em>';
-				}
-				else
-				{
-					the_title();
-				}
-
-				echo '</a>';
-
-				edit_post_link(__('Edit'), ' <span class="admin_link edit_entry">', '</span>');
-				
-				if ( $archives_excerpts )
-				{
-					the_excerpt();
-				}
-
-				echo '</li>' . "\n";
-			}	
-
-			echo '</ul>' . "\n";
-
-			echo '</div>' . "\n";
-		}
-	} # archives()
-	
-	
-	#
-	# get_options()
-	#
-	
-	function get_options()
-	{
-		if ( ( $o = get_option('sem_seo') ) === false )
-		{
-			$o = array(
-				'title' => '',
-				'add_site_name' => false,
-				'archives' => true,
-				'category_dates' => true,
-				'category_excerpts' => true,
-				'tag_dates' => true,
-				'tag_excerpts' => false,
-				'keywords' => '',
-				'description' => ''
-				);
+			if ( $i && $date )
+				echo '</ul>' . "\n";
 			
-			update_option('sem_seo', $o);
+			if ( $date )
+				echo '<h3>' . $date . '</h3>' . "\n";
+			
+			if ( !$i || $date )
+				echo '<ul>' . "\n";
+			
+			echo '<li>' . $title . '</li>' . "\n";
+			
+			$i++;
 		}
 		
-		return $o;
-	} # get_options()
+		echo '</ul>' . "\n"
+			. '</div>' . "\n";
+	} # archive_titles()
 	
+	
+	/**
+	 * www_pref()
+	 *
+	 * @return void
+	 **/
 
-	#
-	# enforce_www()
-	#
-
-	function enforce_www()
-	{
-		if ( strpos($_SERVER['HTTP_HOST'], 'www.') === 0
-			&& strpos(get_option('siteurl'), '://www.') === false
-		 	|| strpos($_SERVER['HTTP_HOST'], 'www.') === false
-			&& strpos(get_option('siteurl'), '://www.') !== false
-			)
-		{
-			$root = get_option('home');
-			
+	function www_pref() {
+		$host = strtolower($_SERVER['HTTP_HOST']);
+		$site_url = strtolower(get_option('siteurl'));
+		
+		if ( strpos($host, 'www.') === 0 && strpos($site_url, '://www.') === false
+		 	|| strpos($host, 'www.') === false && strpos($site_url, '://www.') !== false
+			) {
+			$root = get_option('siteurl');
 			preg_match("|(.+://[^/]+)|", $root, $root);
-			
 			$root = end($root);
 			
 			wp_redirect($root . $_SERVER['REQUEST_URI'], 301);
 			die;
 		}
-	} # enforce_www()
+	} # www_pref()
+	
+	
+	/**
+	 * home_slash_pref()
+	 *
+	 * @return void
+	 **/
+
+	function home_slash_pref() {
+		if ( !is_front_page() || is_paged() )
+			return;
+
+		$home_url = user_trailingslashit(get_option('home'));
+		$home_path = parse_url($home_url);
+		$home_path = $home_path['path'];
+		$request_path = parse_url($_SERVER['REQUEST_URI']);
+		$request_path = $request_path['path'];
+		
+		if ( rtrim($request_path, '/') != rtrim($home_path, '/') ) {
+			wp_redirect($home_url, 301);
+			die;
+		}
+	} # home_slash_pref()
+	
+	
+	/**
+	 * wp_title
+	 *
+	 * @param string $title
+	 * @param string $sep
+	 * @param string $seplocation
+	 * @return string $title
+	 **/
+
+	function wp_title($title, $sep, $seplocation) {
+		if ( is_feed() )
+			return $title;
+		
+		global $wp_the_query;
+		
+		$o = sem_seo::get_options();
+		
+		$title = trim($title);
+		$site_name = $o['add_site_name'] ? get_option('blogname') : false;
+		
+		if ( is_singular() || $wp_the_query->is_posts_page )
+			$post_id = $wp_the_query->get_queried_object_id();
+		else
+			$post_id = false;
+		
+		$new_title = false;
+		
+		switch ( $post_id !== false ) {
+		case true:
+			$new_title = get_post_meta($post_id, '_title', true);
+			if ( $new_title )
+				break;
+		default:
+			if ( is_home() || is_front_page() )
+				$new_title = $o['title'];
+		}
+		
+		if ( !$title && !$new_title )
+			$title = get_option('blogdescription');
+		
+		if ( $new_title ) {
+			if ( $site_name )
+				$title = $new_title;
+			elseif ( $seplocation == 'right' )
+				$title = "$new_title $sep ";
+			else
+				$title = " $sep $new_title";
+		}
+		
+		if ( $site_name )
+			$title = "$title | $site_name";
+		
+		return $title;
+	} # wp_title()
+	
+	
+	/**
+	 * wp_head()
+	 *
+	 * @return void
+	 **/
+
+	function wp_head() {
+		if ( is_search() || is_404() )
+			return;
+		
+		global $wp_the_query;
+		
+		$o = sem_seo::get_options();
+		
+		if ( is_singular() || $wp_the_query->is_posts_page )
+			$post_id = $wp_the_query->get_queried_object_id();
+		else
+			$post_id = false;
+		
+		foreach ( array('keywords', 'description') as $var ) {
+			$$var = false;
+			switch ( $post_id !== false ) {
+			case true:
+				$$var = get_post_meta($post_id, '_' . $var, true);
+				if ( $$var )
+					break;
+			default:
+				if ( is_home() || is_front_page() )
+					$$var = $o[$var];
+			}
+		}
+		
+		if ( !$keywords )
+			$keywords = sem_seo::get_keywords();
+		
+		if ( !$description ) {
+			if ( is_category() ) {
+				$description = get_term_field('description', get_query_var('cat'), 'category');
+			} elseif ( is_tag() ) {
+				$description = get_term_field('description', get_query_var('tag_id'), 'post_tag');
+			}
+			$description = trim(strip_tags($description));
+		}
+		
+		foreach ( array('keywords', 'description') as $var ) {
+			if ( $$var ) {
+				echo '<meta name="' . $var . '" content="' . esc_attr($$var) . '" />' . "\n";
+			}
+		}
+	} # wp_head()
+	
+	
+	/**
+	 * get_keywords()
+	 *
+	 * @return string $keywords
+	 **/
+
+	function get_keywords() {
+		global $wp_the_query;
+		
+		if ( !$wp_the_query->posts )
+			return;
+		
+		$keywords = array();
+		$exclude = array();
+		
+		if ( defined('main_cat_id') && main_cat_id )
+			$exclude[] = main_cat_id;
+		
+		if ( defined('highlights_cat_id') && highlights_cat_id )
+			$exclude[] = highlights_cat_id;
+		
+		foreach ( $wp_the_query->posts as $post ) {
+			foreach ( (array) get_the_category($post->ID) as $term ) {
+				if ( in_array($term->term_id, $exclude) )
+					continue;
+				$keywords[] = $term->name;
+			}
+			
+			foreach ( (array) get_the_tags($post->ID) as $term ) {
+				$keywords[] = $term->name;
+			}
+		}
+		
+		$keywords = array_map('strtolower', $keywords);
+		$keywords = array_unique($keywords);
+		
+		sort($keywords);
+		
+		return implode(', ', $keywords);
+	} # get_keywords()
+	
+	
+	/**
+	 * ob_start()
+	 *
+	 * @return void
+	 **/
+
+	function ob_google_start() {
+		ob_start(array('sem_seo', 'ob_google_filter'));
+		add_action('wp_footer', array('sem_seo', 'ob_google_flush'), 10000);
+		remove_action('wp_head', array('sem_seo', 'ob_google_start'), 10000);
+	} # ob_google_start()
+	
+	
+	/**
+	 * ob_google_filter
+	 *
+	 * @param string $text
+	 * @return string $text
+	 **/
+
+	function ob_google_filter($text) {
+		$text = preg_replace("/
+			^.*?
+			<\s*body(?:\s.*?)>
+			/isx", "$0\n" . '<!-- google_ad_section_start(weight=ignore) -->', $text);
+		
+		return $text;
+	} # ob_google_filter()
+	
+	
+	/**
+	 * ob_google_flush()
+	 *
+	 * @return void
+	 **/
+
+	function ob_google_flush() {
+		ob_end_flush();
+		echo '<!-- google_ad_section_end -->' . "\n";
+		remove_action('wp_footer', array('sem_seo', 'ob_google_flush'), 10000);
+	} # ob_google_flush()
+	
+	
+	/**
+	 * google_start()
+	 *
+	 * @param object &$wp_query
+	 * @return void
+	 **/
+
+	function google_start(&$wp_query) {
+		global $wp_the_query;
+		
+		if ( $wp_query !== $wp_the_query )
+			return;
+		
+		echo "\n"
+			. '<!-- google_ad_section_end -->' . "\n"
+			. '<!-- google_ad_section_start -->' . "\n";
+	} # google_start()
+	
+	
+	/**
+	 * google_end()
+	 *
+	 * @param object &$wp_query
+	 * @return void
+	 **/
+
+	function google_end(&$wp_query) {
+		global $wp_the_query;
+		
+		if ( $wp_query !== $wp_the_query )
+			return;
+		
+		echo "\n"
+			. '<!-- google_ad_section_end -->' . "\n"
+			. '<!-- google_ad_section_start(weight=ignore) -->' . "\n";
+	} # google_end()
+	
+	
+	/**
+	 * get_options()
+	 *
+	 * @return array $options
+	 **/
+
+	function get_options() {
+		static $o;
+		
+		if ( !is_admin() && isset($o) )
+			return $o;
+		
+		$o = get_option('sem_seo');
+		
+		if ( $o === false )
+			$o = sem_seo::init_options();
+		
+		return $o;
+	} # get_options()
+	
+	
+	/**
+	 * init_options()
+	 *
+	 * @return array $options
+	 **/
+
+	function init_options() {
+		$o = get_option('sem_seo');
+		
+		$defaults = array(
+			'title' => '',
+			'keywords' => '',
+			'description' => '',
+			'site_name' => false,
+			'categories' => 'excerpts',
+			'tags' => 'list',
+			'authors' => 'list',
+			'dates' => 'list',
+			);
+		
+		if ( !$o ) {
+			$o  = $defaults;
+		} elseif ( isset($o['archives']) ) {
+			$o = wp_parse_args($o, $defaults);
+			
+			if ( $o['archives'] ) {
+				$o['dates'] = 'list';
+				foreach ( array('category' => 'categories', 'tag' => 'tags') as $type => $types ) {
+					if ( $o[$type . '_excerpts'] )
+						$o[$types] = 'excerpts';
+					elseif ( $o[$type . '_dates'] )
+						$o[$types] = 'list';
+					elseif ( !$o[$type . '_dates'] )
+						$o[$types] = 'raw_list';
+				}
+				$o['authors'] = 'list';
+			} else {
+				$o['dates'] = false;
+				$o['categories'] = false;
+				$o['tags'] = false;
+				$o['authors'] = false;
+			}
+			
+			extract($o, EXTR_SKIP);
+			$o = compact(array_keys($defaults));
+		} else {
+			$o = $defaults;
+		}
+		
+		update_option('sem_seo', $o);
+		
+		return $o;
+	} # init_options()
+	
+	
+	/**
+	 * admin_menu()
+	 *
+	 * @return void
+	 **/
+
+	function admin_menu() {
+		add_options_page(
+			__('SEO', 'sem-seo'),
+			__('SEO', 'sem-seo'),
+			'manage_options',
+			'seo',
+			array('sem_seo_admin', 'edit_options')
+			);
+	} # admin_menu()
+	
+	
+	/**
+	 * meta_boxes()
+	 *
+	 * @return void
+	 **/
+
+	function meta_boxes() {
+		if ( current_user_can('edit_posts') ) {
+			add_meta_box('sem_seo_admin', __('Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'post');
+			add_action('save_post', array('sem_seo_admin', 'save_entry'));
+		}
+		if ( current_user_can('edit_pages') ) {
+			add_meta_box('sem_seo_admin', __('Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'page');
+			add_action('save_post', array('sem_seo_admin', 'save_entry'));
+		}
+	} # meta_boxes()
 } # sem_seo
 
-sem_seo::init();
 
-if ( is_admin() )
-{
+function seo_seo_admin() {
 	include dirname(__FILE__) . '/sem-seo-admin.php';
 }
+
+foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'settings_page_seo') as $hook )
+	add_action("load-$hook", 'seo_seo_admin');
 ?>
