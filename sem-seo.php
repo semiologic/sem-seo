@@ -239,7 +239,7 @@ class sem_seo {
 				echo '</ul>' . "\n";
 			
 			if ( $date )
-				echo '<h3>' . $date . '</h3>' . "\n";
+				echo '<h3 class="post_list_date">' . $date . '</h3>' . "\n";
 			
 			if ( !$i || $date )
 				echo '<ul>' . "\n";
