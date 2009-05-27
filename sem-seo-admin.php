@@ -357,7 +357,7 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Link texts count, as do their context. Picture Google as a guargantuan tagging engine where tags are the link texts and their immediate whereabouts. And keep in mind that, nowadays, its algorithms are driven more by the need to eliminate spammy sites than anything.', 'sem-seo')
+				. __('Link anchor text counts, as does their context. Picture Google as a guargantuan tagging engine where tags are the link texts and their immediate whereabouts. And keep in mind that, nowadays, its algorithms are driven more by the need to eliminate spammy sites than anything.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
@@ -369,7 +369,7 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('The Semiologic and Semiologic Reloaded themes have heading tags where you\'re not necessarily expecting them (if you\'re an SEO forum regular). This is to semantically split your page into distinct sections.', 'sem-seo')
+				. __('The Semiologic and Semiologic Reloaded themes have heading tags where you\'re not necessarily expecting them (if you\'re an SEO forum regular). This is to semantically split your page into distinct sections, so as to insulate your content from your site\'s cosmetic and navigation elements.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
@@ -377,7 +377,7 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Noise words aren\'t necessarily what you think. Where \'in\', \'the\', \'a\', and so on are clearly stopwords, so are your keywords if you abuse their usage. To perceive a black dot on a white page, it needs to contrast with its surroundings. Much like eye perception (or any signal detection for that matter), meaning comes from derivatives, i.e. difference and contrast, rather than mere presence and amplitude.', 'sem-seo')
+				. __('Your keywords can be noise words just as much as &quot;in&quot;, &quot;the&quot;, &quot;a&quot;, etc. if you abuse their usage. To perceive a black dot on a white page, it needs to contrast with its surroundings. Much like eye perception (or any signal detection for that matter), meaning comes from derivatives, i.e. difference and contrast, rather than mere presence and amplitude.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
@@ -392,7 +392,7 @@ class sem_seo_admin {
 			. '<ul class="ul-square">' . "\n";
 		
 			echo '<li>'
-				. __('Duplicate content issues on tier sites are very real. Either put your key content on static pages (which don\'t show up in feeds), or serve excerpts in your feeds, or both. And don\'t plagiarize content from third party sites using RSS aggregators.', 'sem-seo')
+				. __('Duplicate content issues on third party sites are very real. Fight content theft by either putting your key content on static pages (which don\'t show up in feeds), or by serving excerpts in your feeds -- or both. And don\'t plagiarize content from third party sites using RSS aggregators.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
@@ -415,7 +415,7 @@ class sem_seo_admin {
 			. '<ul class="ul-square">' . "\n";
 			
 			echo '<li>'
-				. __('Don\'t give too much attention to the number of cosmetic links on your pages or their whereabouts. It is <strong>trivial</strong> to algorithmically extract a page\'s contents from its cosmetic and navigation areas. (You compare two or three pages on a site; the difference between them will reveal where the important content is located.)', 'sem-seo')
+				. __('Don\'t give too much attention to the number of links in your pages\' cosmetic and navigation areas (i.e. header, sidebar, footer). It is <strong>trivial</strong> to algorithmically extract a page\'s contents from its cosmetic and navigation areas. You compare two or three pages on a site; the difference between them will reveal where its content is located.', 'sem-seo')
 				. '</li>' . "\n";
 			
 			echo '<li>'
@@ -446,11 +446,11 @@ class sem_seo_admin {
 			. '<ul class="ul-square">' . "\n";
 		
 			echo '<li>'
-				. __('XML sitemaps are useful to the extent that they\'ll get your site indexed <em>faster</em>. Per specs, the (optional) link attributes are indications to search engines. They won\'t have the slightest impact on how <em>well</em> individual pages on your site will get indexed.', 'sem-seo')
+				. __('XML sitemaps are useful to the extent that they\'ll get your site indexed <em>faster</em>. The XML sitemaps specs say that the (optional) link attributes are indications to search engines. They won\'t have the slightest impact on how <em>well</em> individual pages on your site will get indexed.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Performance counts. A huge ping list can have a severe performance impact on your site, and harm your rankings by degrading your server\'s response time. Stick to using pingomatic, and perhaps a few specialized ping services that relate to your site or region. Don\'t install plugins that offer to fix ping service notifications -- they\'re already throttled in WordPress.', 'sem-seo')
+				. __('Performance counts. A huge ping list can have a severe performance impact on your site, and harm your rankings by degrading your server\'s response time. Stick to using pingomatic, and perhaps a few specialized ping services that relate to your site or region. Or Feedburner\'s equivalent service. Don\'t install plugins that offer to fix ping service notifications -- they\'re already throttled in WordPress.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'

@@ -88,16 +88,12 @@ class sem_seo {
 	function archive_start(&$wp_query) {
 		global $wp_the_query;
 		
-		if ( $wp_query !== $wp_the_query )
-			return;
-		
-		remove_action('loop_start', array('sem_seo', 'archive_start'), -1000);
-		
-		if ( is_feed() || !is_archive() )
+		if ( $wp_query !== $wp_the_query || is_feed() || !is_archive() )
 			return;
 		
 		$o = sem_seo::get_options();
 		
+		remove_action('loop_start', array('sem_seo', 'archive_start'), -1000);
 		add_action('loop_end', array('sem_seo', 'archive_end'), 1000);
 		
 		if ( is_category() && $o['categories'] == 'excerpts'
@@ -199,7 +195,9 @@ class sem_seo {
 		
 		$i = 0;
 		
-		echo '<div class="post_list">' . "\n";
+		echo '<div class="entry">' . "\n"
+			. '<div class="entry_top"><div class="hidden"></div></div>' . "\n"
+			. '<div class="post_list">' . "\n";
 		
 		while ( $wp_the_query->have_posts() ) {
 			$wp_the_query->the_post();
@@ -252,6 +250,8 @@ class sem_seo {
 		}
 		
 		echo '</ul>' . "\n"
+			. '</div>' . "\n"
+			. '<div class="entry_bottom"><div class="hidden"></div></div>' . "\n"
 			. '</div>' . "\n";
 	} # archive_titles()
 	
@@ -403,9 +403,8 @@ class sem_seo {
 		}
 		
 		foreach ( array('keywords', 'description') as $var ) {
-			if ( $$var ) {
+			if ( $$var )
 				echo '<meta name="' . $var . '" content="' . esc_attr($$var) . '" />' . "\n";
-			}
 		}
 	} # wp_head()
 	
