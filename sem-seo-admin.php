@@ -148,7 +148,7 @@ class sem_seo_admin {
 			. '</p>' . "\n";
 		
 		echo '<p>'
-			. __('By sticking to short excerpts or lists of post titles on archive pages, you prevent your archive pages from competing with your posts, while continuing to benefit from archive pages with high ranking power.', 'sem-seo')
+			. __('By sticking to short excerpts or lists of post titles on archive pages, you prevent these pages from competing with your posts, while continuing to benefit from archive pages with high ranking power. In WordPress, archives pages include category, tag, author and date archives.', 'sem-seo')
 			. '</p>' . "\n";
 		
 		echo '<p>'
@@ -349,15 +349,15 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Your page\'s &lt;title&gt; tag is very important. A descriptive title can make the difference between a click or not in search results and RSS readers.', 'sem-seo')
+				. __('Your page\'s &lt;title&gt; tag is very important. In addition to being important from a semantic standpoint, it appears as the top line of the entry when your site is listed by the search engines. A descriptive title can make the difference between a click or not in search results and RSS readers.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Meta keyword and description fields mostly useless. The only reason they\'re included in the Semiologc SEO plugin is because a few users failed to grasp that Google\'s key innovation was to ignore them. Your time will be better spent on marketing than on filling meta fields.', 'sem-seo')
+				. __('Meta keyword and description fields are mostly useless. The only reason they\'re included in the Semiologc SEO plugin is because a few users failed to grasp that Google\'s key innovation was to ignore them. Your time will be better spent on marketing than on filling meta fields.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Link anchor text counts, as does their context. Picture Google as a guargantuan tagging engine where tags are the link texts and their immediate whereabouts. And keep in mind that, nowadays, its algorithms are driven more by the need to eliminate spammy sites than anything.', 'sem-seo')
+				. __('Link anchor text counts, as does their context. Picture Google as a gargantuan tagging engine where tags are the link texts, in the context of their neighboring text. And keep in mind that, nowadays, its algorithms are driven more by the need to eliminate spammy sites than anything.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
@@ -369,11 +369,11 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('The Semiologic and Semiologic Reloaded themes have heading tags where you\'re not necessarily expecting them (if you\'re an SEO forum regular). This is to semantically split your page into distinct sections, so as to insulate your content from your site\'s cosmetic and navigation elements.', 'sem-seo')
+				. __('The Semiologic and Semiologic Reloaded themes have heading tags, in sidebars for instance, that SEO forum regulars may (wrongly) find erroneous. This is to semantically split your page into distinct sections, so as to semantically insulate your content from your site\'s cosmetic and navigation elements.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('New and/or updated content counts, and that is one of the reasons blogs fare well in search engines. While a small update will give boost your ranking, a huge update can harm it -- in that a page whose content was entirely rewritten gets treated as an entirely new page. Use at least 5 posts per post page. Better yet, stick to WordPress and Semiologic SEO defaults.', 'sem-seo')
+				. __('New and/or updated content counts, and that is one of the reasons blogs fare well in search engines. While a small update can give a boost to your ranking, a huge update can harm it -- in that a page whose content was entirely rewritten gets treated as an entirely new page. Use at least 5 posts per post page. Better yet, stick to WordPress and Semiologic SEO defaults.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
@@ -400,11 +400,11 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('<strong>Stand clear of &quot;SEO&quot; plugins that &quot;deal&quot; with duplicate content issues by unindexing pages on your site</strong>. You can be sure that their authors haven\'t the slightest clue of how a search engine works. Having stubs (archives pages, section pages) with high ranking power is <strong>always</strong> preferrable.', 'sem-seo')
+				. __('<strong>Stand clear of &quot;SEO&quot; plugins that &quot;deal&quot; with duplicate content issues by unindexing pages on your site</strong>. You can be sure that their authors have little idea of how a search engine works. Having archive and section pages with high ranking power will help your posts and child pages rank better and faster. It is thus <strong>always</strong> preferrable.', 'sem-seo')
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('In addition to being useless, adding nofollow attributes to inbound links is the surest way to ultimately get your site penalized on grounds that you\'re trying to game search engines. Nofollow was introduced to mark outbound links (usually in comments) that are irrelevant to the post\'s or page\'s contents as such.', 'sem-seo')
+				. __('In addition to being useless, adding nofollow attributes to internal links is a sure way to ultimately get your site penalized on grounds that you\'re trying to game search engines. Nofollow was introduced to mark outbound links (usually in comments) that are irrelevant to the post\'s or page\'s contents. Use it as such.', 'sem-seo')
 				. '</li>' . "\n";
 		
 		echo '</ul>' . "\n"
@@ -415,7 +415,7 @@ class sem_seo_admin {
 			. '<ul class="ul-square">' . "\n";
 			
 			echo '<li>'
-				. __('Don\'t give too much attention to the number of links in your pages\' cosmetic and navigation areas (i.e. header, sidebar, footer). It is <strong>trivial</strong> to algorithmically extract a page\'s contents from its cosmetic and navigation areas. You compare two or three pages on a site; the difference between them will reveal where its content is located.', 'sem-seo')
+				. __('Don\'t give too much attention to the number of links in your pages\' cosmetic and navigation areas (i.e. header, sidebar, footer). It is <strong>trivial</strong> to algorithmically extract a page\'s contents from its cosmetic and navigation areas. You compare two or three pages on a site; the difference between them will reveal where the real content is located.', 'sem-seo')
 				. '</li>' . "\n";
 			
 			echo '<li>'
@@ -454,7 +454,7 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Some permalink structures (<a href="options-permalinks.php">Settings / Permalinks</a>) have a negative impact on your site\'s performance. Worst offenders in this arena are /category/postname/ and /postname/. Avoid those two, and their sibblings, like the Plague. Structures that start with a date, i.e. the &quot;Day and name&quot; or &quot;Month and name&quot; structures, are just as optimized, they perform well and they\'ve the added benefit of being the best for usability.', 'sem-seo')
+				. __('Some permalink structures (<a href="options-permalinks.php">Settings / Permalinks</a>) have a negative impact on your site\'s performance. Worst offenders in this arena are /category/postname/ and /postname/. Avoid those two, and their siblings, like the Plague. Structures that start with a date, i.e. the &quot;Day and name&quot; or &quot;Month and name&quot; structures, are just as optimized, they perform well and they\'ve the added benefit of being the best for usability.', 'sem-seo')
 				. '</li>' . "\n";
 			
 		echo '</ul>' . "\n"
@@ -469,7 +469,7 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Until 1995, people would start by asking their contacts when they searched for information. Now, consider how search has evolved in the past years, and where it\'s heading. It\'ll give preminence to your contacts\' bookmarks. Because your contacts\' opinions count more, to you, than the opinions of people you don\'t know. Keep this in mind while you market your site.', 'sem-seo')
+				. __('Until 1995, people would start by asking their contacts when they searched for information. Now, consider how search has evolved in the past years, and where it\'s heading. It\'ll give pre-eminence to your contacts\' bookmarks. Because your contacts\' opinions count more, to you, than the opinions of people you don\'t know. Keep this in mind while you market your site.', 'sem-seo')
 				. '</li>' . "\n";
 			
 		echo '</ul>' . "\n"

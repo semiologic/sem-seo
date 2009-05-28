@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.5\n"
+"Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: https://tickets.semiologic.com\n"
-"POT-Creation-Date: 2009-05-27 23:10+0200\n"
+"POT-Creation-Date: 2009-05-28 19:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "SEO Settings"
 msgstr ""
 
-#: sem-seo-admin.php:82 sem-seo.php:637 sem-seo.php:641
+#: sem-seo-admin.php:82 sem-seo.php:636 sem-seo.php:640
 msgid "Title &amp; Meta"
 msgstr ""
 
@@ -42,8 +42,9 @@ msgstr ""
 #: sem-seo-admin.php:151
 msgid ""
 "By sticking to short excerpts or lists of post titles on archive pages, you "
-"prevent your archive pages from competing with your posts, while continuing "
-"to benefit from archive pages with high ranking power."
+"prevent these pages from competing with your posts, while continuing to "
+"benefit from archive pages with high ranking power. In WordPress, archives "
+"pages include category, tag, author and date archives."
 msgstr ""
 
 #: sem-seo-admin.php:155
@@ -161,24 +162,27 @@ msgstr ""
 
 #: sem-seo-admin.php:352
 msgid ""
-"Your page's &lt;title&gt; tag is very important. A descriptive title can "
-"make the difference between a click or not in search results and RSS readers."
+"Your page's &lt;title&gt; tag is very important. In addition to being "
+"important from a semantic standpoint, it appears as the top line of the "
+"entry when your site is listed by the search engines. A descriptive title "
+"can make the difference between a click or not in search results and RSS "
+"readers."
 msgstr ""
 
 #: sem-seo-admin.php:356
 msgid ""
-"Meta keyword and description fields mostly useless. The only reason they're "
-"included in the Semiologc SEO plugin is because a few users failed to grasp "
-"that Google's key innovation was to ignore them. Your time will be better "
-"spent on marketing than on filling meta fields."
+"Meta keyword and description fields are mostly useless. The only reason "
+"they're included in the Semiologc SEO plugin is because a few users failed "
+"to grasp that Google's key innovation was to ignore them. Your time will be "
+"better spent on marketing than on filling meta fields."
 msgstr ""
 
 #: sem-seo-admin.php:360
 msgid ""
-"Link texts count, as do their context. Picture Google as a guargantuan "
-"tagging engine where tags are the link texts and their immediate "
-"whereabouts. And keep in mind that, nowadays, its algorithms are driven more "
-"by the need to eliminate spammy sites than anything."
+"Link anchor text counts, as does their context. Picture Google as a "
+"gargantuan tagging engine where tags are the link texts, in the context of "
+"their neighboring text. And keep in mind that, nowadays, its algorithms are "
+"driven more by the need to eliminate spammy sites than anything."
 msgstr ""
 
 #: sem-seo-admin.php:364
@@ -198,28 +202,31 @@ msgstr ""
 
 #: sem-seo-admin.php:372
 msgid ""
-"The Semiologic and Semiologic Reloaded themes have heading tags where you're "
-"not necessarily expecting them (if you're an SEO forum regular). This is to "
-"semantically split your page into distinct sections."
+"The Semiologic and Semiologic Reloaded themes have heading tags, in sidebars "
+"for instance, that SEO forum regulars may (wrongly) find erroneous. This is "
+"to semantically split your page into distinct sections, so as to "
+"semantically insulate your content from your site's cosmetic and navigation "
+"elements."
 msgstr ""
 
 #: sem-seo-admin.php:376
 msgid ""
 "New and/or updated content counts, and that is one of the reasons blogs fare "
-"well in search engines. While a small update will give boost your ranking, a "
-"huge update can harm it -- in that a page whose content was entirely "
-"rewritten gets treated as an entirely new page. Use at least 5 posts per "
-"post page. Better yet, stick to WordPress and Semiologic SEO defaults."
+"well in search engines. While a small update can give a boost to your "
+"ranking, a huge update can harm it -- in that a page whose content was "
+"entirely rewritten gets treated as an entirely new page. Use at least 5 "
+"posts per post page. Better yet, stick to WordPress and Semiologic SEO "
+"defaults."
 msgstr ""
 
 #: sem-seo-admin.php:380
 msgid ""
-"Noise words aren't necessarily what you think. Where 'in', 'the', 'a', and "
-"so on are clearly stopwords, so are your keywords if you abuse their usage. "
-"To perceive a black dot on a white page, it needs to contrast with its "
-"surroundings. Much like eye perception (or any signal detection for that "
-"matter), meaning comes from derivatives, i.e. difference and contrast, "
-"rather than mere presence and amplitude."
+"Your keywords can be noise words just as much as &quot;in&quot;, &quot;"
+"the&quot;, &quot;a&quot;, etc. if you abuse their usage. To perceive a black "
+"dot on a white page, it needs to contrast with its surroundings. Much like "
+"eye perception (or any signal detection for that matter), meaning comes from "
+"derivatives, i.e. difference and contrast, rather than mere presence and "
+"amplitude."
 msgstr ""
 
 #: sem-seo-admin.php:384
@@ -235,10 +242,10 @@ msgstr ""
 
 #: sem-seo-admin.php:395
 msgid ""
-"Duplicate content issues on tier sites are very real. Either put your key "
-"content on static pages (which don't show up in feeds), or serve excerpts in "
-"your feeds, or both. And don't plagiarize content from third party sites "
-"using RSS aggregators."
+"Duplicate content issues on third party sites are very real. Fight content "
+"theft by either putting your key content on static pages (which don't show "
+"up in feeds), or by serving excerpts in your feeds -- or both. And don't "
+"plagiarize content from third party sites using RSS aggregators."
 msgstr ""
 
 #: sem-seo-admin.php:399
@@ -256,18 +263,19 @@ msgstr ""
 msgid ""
 "<strong>Stand clear of &quot;SEO&quot; plugins that &quot;deal&quot; with "
 "duplicate content issues by unindexing pages on your site</strong>. You can "
-"be sure that their authors haven't the slightest clue of how a search engine "
-"works. Having stubs (archives pages, section pages) with high ranking power "
-"is <strong>always</strong> preferrable."
+"be sure that their authors have little idea of how a search engine works. "
+"Having archive and section pages with high ranking power will help your "
+"posts and child pages rank better and faster. It is thus <strong>always</"
+"strong> preferrable."
 msgstr ""
 
 #: sem-seo-admin.php:407
 msgid ""
-"In addition to being useless, adding nofollow attributes to inbound links is "
-"the surest way to ultimately get your site penalized on grounds that you're "
+"In addition to being useless, adding nofollow attributes to internal links "
+"is a sure way to ultimately get your site penalized on grounds that you're "
 "trying to game search engines. Nofollow was introduced to mark outbound "
 "links (usually in comments) that are irrelevant to the post's or page's "
-"contents as such."
+"contents. Use it as such."
 msgstr ""
 
 #: sem-seo-admin.php:414
@@ -276,11 +284,11 @@ msgstr ""
 
 #: sem-seo-admin.php:418
 msgid ""
-"Don't give too much attention to the number of cosmetic links on your pages "
-"or their whereabouts. It is <strong>trivial</strong> to algorithmically "
-"extract a page's contents from its cosmetic and navigation areas. (You "
-"compare two or three pages on a site; the difference between them will "
-"reveal where the important content is located.)"
+"Don't give too much attention to the number of links in your pages' cosmetic "
+"and navigation areas (i.e. header, sidebar, footer). It is <strong>trivial</"
+"strong> to algorithmically extract a page's contents from its cosmetic and "
+"navigation areas. You compare two or three pages on a site; the difference "
+"between them will reveal where the real content is located."
 msgstr ""
 
 #: sem-seo-admin.php:422
@@ -327,9 +335,9 @@ msgstr ""
 #: sem-seo-admin.php:449
 msgid ""
 "XML sitemaps are useful to the extent that they'll get your site indexed "
-"<em>faster</em>. Per specs, the (optional) link attributes are indications "
-"to search engines. They won't have the slightest impact on how <em>well</em> "
-"individual pages on your site will get indexed."
+"<em>faster</em>. The XML sitemaps specs say that the (optional) link "
+"attributes are indications to search engines. They won't have the slightest "
+"impact on how <em>well</em> individual pages on your site will get indexed."
 msgstr ""
 
 #: sem-seo-admin.php:453
@@ -337,8 +345,9 @@ msgid ""
 "Performance counts. A huge ping list can have a severe performance impact on "
 "your site, and harm your rankings by degrading your server's response time. "
 "Stick to using pingomatic, and perhaps a few specialized ping services that "
-"relate to your site or region. Don't install plugins that offer to fix ping "
-"service notifications -- they're already throttled in WordPress."
+"relate to your site or region. Or Feedburner's equivalent service. Don't "
+"install plugins that offer to fix ping service notifications -- they're "
+"already throttled in WordPress."
 msgstr ""
 
 #: sem-seo-admin.php:457
@@ -346,10 +355,10 @@ msgid ""
 "Some permalink structures (<a href=\"options-permalinks.php\">Settings / "
 "Permalinks</a>) have a negative impact on your site's performance. Worst "
 "offenders in this arena are /category/postname/ and /postname/. Avoid those "
-"two, and their sibblings, like the Plague. Structures that start with a "
-"date, i.e. the &quot;Day and name&quot; or &quot;Month and name&quot; "
-"structures, are just as optimized, they perform well and they've the added "
-"benefit of being the best for usability."
+"two, and their siblings, like the Plague. Structures that start with a date, "
+"i.e. the &quot;Day and name&quot; or &quot;Month and name&quot; structures, "
+"are just as optimized, they perform well and they've the added benefit of "
+"being the best for usability."
 msgstr ""
 
 #: sem-seo-admin.php:464
@@ -371,7 +380,7 @@ msgstr ""
 msgid ""
 "Until 1995, people would start by asking their contacts when they searched "
 "for information. Now, consider how search has evolved in the past years, and "
-"where it's heading. It'll give preminence to your contacts' bookmarks. "
+"where it's heading. It'll give pre-eminence to your contacts' bookmarks. "
 "Because your contacts' opinions count more, to you, than the opinions of "
 "people you don't know. Keep this in mind while you market your site."
 msgstr ""
@@ -405,14 +414,14 @@ msgid ""
 "your marketing and conversion rates."
 msgstr ""
 
-#: sem-seo.php:218
+#: sem-seo.php:216
 msgid "Untitled"
 msgstr ""
 
-#: sem-seo.php:230 sem-seo.php:231
+#: sem-seo.php:228 sem-seo.php:229
 msgid "Edit"
 msgstr ""
 
-#: sem-seo.php:620 sem-seo.php:621
+#: sem-seo.php:619 sem-seo.php:620
 msgid "SEO"
 msgstr ""
