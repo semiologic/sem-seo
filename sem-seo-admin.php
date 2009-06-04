@@ -280,7 +280,7 @@ class sem_seo_admin {
 					'label' => __('Title', 'sem-seo'),
 					'desc' => '<p>' . __('The title field lets you override the &lt;title&gt; tag of the blog\'s main page. It defaults to the site\'s tagline (<a href="options-general.php">Settings / General</a>)', 'sem-seo') . '</p>' . "\n",
 					),
-			'site_name' => array(
+			'add_site_name' => array(
 					'label' => __('Site Name', 'sem-seo'),
 					'desc' => __('Append the name of the site to the title of each web page.', 'sem-seo'),
 					),
@@ -312,7 +312,7 @@ class sem_seo_admin {
 			foreach ( array('title', 'keywords', 'description') as $field )
 				$_fields[$field] = $fields[$field];
 		} elseif ( $context == 'ext_meta' ) {
-			foreach ( array('title', 'site_name', 'keywords', 'description') as $field )
+			foreach ( array('title', 'add_site_name', 'keywords', 'description') as $field )
 				$_fields[$field] = $fields[$field];
 		} elseif ( $context = 'archives' ) {
 			foreach ( array('categories', 'tags', 'authors', 'dates') as $field )

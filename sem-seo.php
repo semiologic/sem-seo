@@ -339,17 +339,10 @@ class sem_seo {
 				$new_title = $o['title'];
 		}
 		
-		if ( !$title && !$new_title )
+		if ( $new_title )
+			$title = $new_title;
+		elseif ( !$title )
 			$title = get_option('blogdescription');
-		
-		if ( $new_title ) {
-			if ( $site_name )
-				$title = $new_title;
-			elseif ( $seplocation == 'right' )
-				$title = "$new_title $sep ";
-			else
-				$title = " $sep $new_title";
-		}
 		
 		if ( $site_name )
 			$title = "$title | $site_name";
