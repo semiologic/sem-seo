@@ -93,7 +93,7 @@ class sem_seo_admin {
 					. '</th>'
 					. '<td>'
 					. '<textarea name="' . $field . '" cols="58" rows="4" class="widefat">'
-					. format_to_edit($options[$field])
+					. esc_html($options[$field])
 					. '</textarea>'
 					. $details['desc'] . "\n"
 					. '</td>'
@@ -218,7 +218,7 @@ class sem_seo_admin {
 					. '</th>'
 					. '<td>'
 					. '<textarea name="meta[' . $field . ']" cols="58" rows="4" class="widefat" tabindex="5">'
-					. format_to_edit(get_post_meta($post->ID, '_' . $field, true))
+					. esc_html(get_post_meta($post->ID, '_' . $field, true))
 					. '</textarea>'
 					. '</td>'
 					. '</tr>' . "\n";
