@@ -91,9 +91,14 @@ class sem_seo {
 		if ( $wp_query !== $wp_the_query || is_feed() || !is_archive() )
 			return;
 		
+		static $done = false;
+		
+		if ( $done )
+			return;
+		
 		$o = sem_seo::get_options();
 		
-		remove_action('loop_start', array('sem_seo', 'archive_start'), -1000);
+		$done = true;
 		add_action('loop_end', array('sem_seo', 'archive_end'), 1000);
 		
 		if ( is_category() && $o['categories'] == 'excerpts'
@@ -128,7 +133,12 @@ class sem_seo {
 		if ( $wp_query !== $wp_the_query )
 			return;
 		
-		remove_action('loop_end', array('sem_seo', 'archive_end'), 1000);
+		static $done = false;
+		
+		if ( $done )
+			return;
+		
+		$done = true;
 		
 		$o = sem_seo::get_options();
 		
@@ -451,9 +461,14 @@ class sem_seo {
 	 **/
 
 	function ob_google_start() {
+		static $done = false;
+		
+		if ( $done )
+			return;
+		
 		ob_start(array('sem_seo', 'ob_google_filter'));
 		add_action('wp_footer', array('sem_seo', 'ob_google_flush'), 10000);
-		remove_action('wp_head', array('sem_seo', 'ob_google_start'), 10000);
+		$done = true;
 	} # ob_google_start()
 	
 	
@@ -481,9 +496,14 @@ class sem_seo {
 	 **/
 
 	function ob_google_flush() {
+		static $done = false;
+		
+		if ( $done )
+			return;
+		
 		ob_end_flush();
 		echo '<!-- google_ad_section_end -->' . "\n";
-		remove_action('wp_footer', array('sem_seo', 'ob_google_flush'), 10000);
+		$done = true;
 	} # ob_google_flush()
 	
 	
