@@ -343,43 +343,47 @@ class sem_seo_admin {
 		echo '<li>'
 			. '<h3>' . __('The Basics', 'sem-seo') . '</h3>' . "\n"
 			. '<ul class="ul-square">' . "\n";
-		
+			
 			echo '<li>'
 				. __('At the end of the day, the only thing that really counts is end-user experience. Deliver quality content, use the likes of Silo widgets and Nav Menu widgets to enhance your site\'s usability and navigability, and focus on your marketing and conversion rates.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
 				. __('Your page\'s &lt;title&gt; tag is very important. In addition to being important from a semantic standpoint, it appears as the top line of the entry when your site is listed by the search engines. A descriptive title can make the difference between a click or not in search results and RSS readers.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
-				. __('Meta keyword and description fields are mostly useless. The only reason they\'re included in the Semiologc SEO plugin is because a few users failed to grasp that Google\'s key innovation was to ignore them. Your time will be better spent on marketing than on filling meta fields.', 'sem-seo')
+				. __('Meta keyword and description fields are mostly useless from an indexing standpoint. Recall that Google\'s key innovation was to ignore them. If left empty, the meta keywords field is automatically filled using the page\'s categories and tags, and you are advised to leave it blank as a result. The meta description deserves a special note, however.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
+			echo '<li>'
+				. __('Recent research suggests that the meta description field is used by Google to describe your page in search result listings when -- and only when -- a) it is short (140 characters max?) and b) it contains the search phrase. <strong>Do not use it to describe your page</strong>. Instead, find a snappy teaser that will irrisistibly lure those who read it onto your page.', 'sem-seo')
+				. '</li>' . "\n";
+			
 			echo '<li>'
 				. __('Link anchor text counts, as does their context. Picture Google as a gargantuan tagging engine where tags are the link texts, in the context of their neighboring text. And keep in mind that, nowadays, its algorithms are driven more by the need to eliminate spammy sites than anything.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
 				. __('Links often get discounted, but in the end, inbound links <em>always</em> count -- even if in a negligible manner. It\'s much better to have a link from an authoritative site, however. (Yahoo\'s directory is authoritative, by the way.)', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
 				. __('Your posts\' and pages\' introductions and conclusions also make a difference; don\'t neglect them, as they\'ll also enhance your site\'s readability. Split your content with h2/h3 tags if it\'s excessively long.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
 				. __('The Semiologic and Semiologic Reloaded themes have heading tags, in sidebars for instance, that SEO forum regulars may (wrongly) find erroneous. This is to semantically split your page into distinct sections, so as to semantically insulate your content from your site\'s cosmetic and navigation elements.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
 				. __('New and/or updated content counts, and that is one of the reasons blogs fare well in search engines. While a small update can give a boost to your ranking, a huge update can harm it -- in that a page whose content was entirely rewritten gets treated as an entirely new page. Use at least 5 posts per post page. Better yet, stick to WordPress and Semiologic SEO defaults.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
 				. __('Your keywords can be noise words just as much as &quot;in&quot;, &quot;the&quot;, &quot;a&quot;, etc. if you abuse their usage. To perceive a black dot on a white page, it needs to contrast with its surroundings. Much like eye perception (or any signal detection for that matter), meaning comes from derivatives, i.e. difference and contrast, rather than mere presence and amplitude.', 'sem-seo')
 				. '</li>' . "\n";
-		
+			
 			echo '<li>'
 				. __('Pick your fights. Uncompetitive keywords are easier to conquer, and these small victories will ultimately give you an edge when fighting the more harder battles.', 'sem-seo')
 				. '</li>' . "\n";
@@ -489,6 +493,10 @@ class sem_seo_admin {
 		
 			echo '<li>'
 				. __('The only thing that really counts at the end of the day is end-user experience. Deliver quality content, use the likes of Silo widgets and Nav Menu widgets to enhance your site\'s usability and navigability, and focus on your marketing and conversion rates.', 'sem-seo')
+				. '</li>' . "\n";
+		
+			echo '<li>'
+				. __('Special Note: If you\'re seeking to optimize Ad revenue, don\'t make your site &quot;too&quot; navigable: at the end of your page, you want users to click an ad to another site; not a link to a related page on your site.', 'sem-seo')
 				. '</li>' . "\n";
 			
 		echo '</ul>' . "\n"

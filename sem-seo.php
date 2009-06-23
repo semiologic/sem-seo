@@ -6,7 +6,7 @@ Description: All in one SEO plugin for WordPress
 Version: 2.0 RC
 Author: Denis de Bernardy
 Author URI: http://www.getsemiologic.com
-Text Domain: sem-seo-info
+Text Domain: sem-seo
 Domain Path: /lang
 */
 
