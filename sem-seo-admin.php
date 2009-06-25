@@ -357,7 +357,7 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 			
 			echo '<li>'
-				. __('Recent research suggests that the meta description field is used by Google to describe your page in search result listings when -- and only when -- a) it is short (140 characters max?) and b) it contains the search phrase. <strong>Do not use it to describe your page</strong>. Instead, find a snappy teaser that will irrisistibly lure those who read it onto your page.', 'sem-seo')
+				. __('Recent research suggests that the meta description field is used by Google to describe your page in search result listings when -- and only when -- a) it is short (140 characters max?) and b) it contains the search phrase. <strong>Do not use it to describe your page</strong>. Instead, find a snappy teaser that will irresistibly lure those who read it onto your page.', 'sem-seo')
 				. '</li>' . "\n";
 			
 			echo '<li>'
