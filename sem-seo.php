@@ -409,6 +409,12 @@ class sem_seo {
 			if ( $$var )
 				echo '<meta name="' . $var . '" content="' . esc_attr($$var) . '" />' . "\n";
 		}
+		
+		if ( is_singular() ) {
+			echo '<link rel="canonical"'
+				. ' href="' . esc_url(get_permalink($wp_the_query->get_queried_object_id())) . '"'
+				. ' />' . "\n";
+		}
 	} # wp_head()
 	
 	
@@ -437,11 +443,13 @@ class sem_seo {
 			foreach ( (array) get_the_category($post->ID) as $term ) {
 				if ( in_array($term->term_id, $exclude) )
 					continue;
-				$keywords[] = $term->name;
+				if ( isset($term->name) )
+					$keywords[] = $term->name;
 			}
 			
 			foreach ( (array) get_the_tags($post->ID) as $term ) {
-				$keywords[] = $term->name;
+				if ( isset($term->name) )
+					$keywords[] = $term->name;
 			}
 		}
 		
