@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: https://tickets.semiologic.com\n"
-"POT-Creation-Date: 2009-06-23 17:19+0200\n"
+"POT-Creation-Date: 2009-07-07 23:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "SEO Settings"
 msgstr ""
 
-#: sem-seo-admin.php:82 sem-seo.php:649 sem-seo.php:653
+#: sem-seo-admin.php:82 sem-seo.php:657 sem-seo.php:661
 msgid "Title &amp; Meta"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgid ""
 "to describe your page in search result listings when -- and only when -- a) "
 "it is short (140 characters max?) and b) it contains the search phrase. "
 "<strong>Do not use it to describe your page</strong>. Instead, find a snappy "
-"teaser that will irrisistibly lure those who read it onto your page."
+"teaser that will irresistibly lure those who read it onto your page."
 msgstr ""
 
 #: sem-seo-admin.php:364
@@ -439,6 +439,6 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: sem-seo.php:632 sem-seo.php:633
+#: sem-seo.php:640 sem-seo.php:641
 msgid "SEO"
 msgstr ""
