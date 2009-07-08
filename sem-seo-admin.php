@@ -46,8 +46,7 @@ class sem_seo_admin {
 		}
 		
 		update_option('sem_seo', compact(array_merge($meta_fields, $archive_fields)));
-		delete_option('sem_seo');
-		sem_seo::init_options();
+		
 		echo '<div class="updated">' . "\n"
 			. '<p>'
 				. '<strong>'

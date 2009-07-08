@@ -36,7 +36,7 @@ add_action('wp_head', array('sem_seo', 'ob_google_start'), 10000);
 add_action('loop_start', array('sem_seo', 'google_start'), -10000);
 add_action('loop_end', array('sem_seo', 'google_end'), 10000);
 
-add_filter('query_string', array('sem_seo', 'archive_query_string'), 0);
+add_filter('query_string', array('sem_seo', 'archive_query_string'), 20);
 add_action('loop_start', array('sem_seo', 'archive_start'), -1000);
 
 add_action('admin_menu', array('sem_seo', 'admin_menu'));
@@ -567,7 +567,7 @@ class sem_seo {
 		
 		$o = get_option('sem_seo');
 		
-		if ( $o === false )
+		if ( $o === false || isset($o['archives']) )
 			$o = sem_seo::init_options();
 		
 		return $o;
