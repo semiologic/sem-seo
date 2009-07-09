@@ -50,6 +50,23 @@ class sem_seo {
 	 **/
 
 	function archive_query_string($query_string) {
+		parse_str($query_string, $qv);
+		unset($qv['paged'], $qv['debug']);
+		
+		if ( empty($qv) )
+			return $query_string;
+		
+		foreach ( array(
+			'pagename',
+			'feed',
+			'p',
+			'page_id',
+			'attachment_id',
+			) as $bail ) {
+			if ( !empty($qv[$bail]) )
+				return $query_string;
+		}
+		
 		global $wp_the_query;
 		$o = sem_seo::get_options();
 		
