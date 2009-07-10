@@ -5,6 +5,9 @@
  * @package Semiologic SEO
  **/
 
+if ( current_user_can('edit_posts') || current_user_can('edit_pages') )
+	add_action('save_post', array('sem_seo_admin', 'save_entry'));
+
 add_action('settings_page_seo', array('sem_seo_admin', 'save_options'), 0);
 
 class sem_seo_admin {

@@ -670,14 +670,11 @@ class sem_seo {
 	 **/
 
 	function meta_boxes() {
-		if ( current_user_can('edit_posts') ) {
+		if ( current_user_can('edit_posts') )
 			add_meta_box('sem_seo_admin', __('Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'post');
-			add_action('save_post', array('sem_seo_admin', 'save_entry'));
-		}
-		if ( current_user_can('edit_pages') ) {
+		
+		if ( current_user_can('edit_pages') )
 			add_meta_box('sem_seo_admin', __('Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'page');
-			add_action('save_post', array('sem_seo_admin', 'save_entry'));
-		}
 	} # meta_boxes()
 } # sem_seo
 
