@@ -457,7 +457,7 @@ class sem_seo_admin {
 				. '</li>' . "\n";
 		
 			echo '<li>'
-				. __('Some permalink structures (<a href="options-permalinks.php">Settings / Permalinks</a>) have a negative impact on your site\'s performance. Worst offenders in this arena are /category/postname/ and /postname/. Avoid those two, and their siblings, like the Plague. Structures that start with a date, i.e. the &quot;Day and name&quot; or &quot;Month and name&quot; structures, are just as optimized, they perform well and they\'ve the added benefit of being the best for usability.', 'sem-seo')
+				. __('Some permalink structures (<a href="options-permalink.php">Settings / Permalinks</a>) have a negative impact on your site\'s performance. Worst offenders in this arena are /category/postname/ and /postname/. Avoid those two, and their siblings, like the Plague. Structures that start with a date, i.e. the &quot;Day and name&quot; or &quot;Month and name&quot; structures, are just as optimized, they perform well and they\'ve the added benefit of being the best for usability.', 'sem-seo')
 				. '</li>' . "\n";
 			
 		echo '</ul>' . "\n"
