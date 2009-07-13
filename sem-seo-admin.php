@@ -217,7 +217,7 @@ class sem_seo_admin {
 					. $details['label']
 					. '</th>'
 					. '<td>'
-					. '<textarea name="meta[' . $field . ']" cols="58" rows="4" class="widefat" tabindex="5">'
+					. '<textarea name="sem_seo[' . $field . ']" cols="58" rows="4" class="widefat" tabindex="5">'
 					. esc_html(get_post_meta($post->ID, '_' . $field, true))
 					. '</textarea>'
 					. '</td>'
@@ -231,7 +231,7 @@ class sem_seo_admin {
 					. $details['label']
 					. '</th>'
 					. '<td>'
-					. '<input type="text" name="meta[' . $field . ']" size="58" class="widefat" tabindex="5"'
+					. '<input type="text" name="sem_seo[' . $field . ']" size="58" class="widefat" tabindex="5"'
 						. ' value="' . esc_attr(get_post_meta($post->ID, '_' . $field, true)) . '"'
 						. ' />'
 					. '</td>'
@@ -252,12 +252,12 @@ class sem_seo_admin {
 	 **/
 
 	function save_entry($post_ID) {
-		if ( !isset($_POST['meta']) )
+		if ( !isset($_POST['sem_seo']) || wp_is_post_revision($post_ID) )
 			return;
 		
-		extract($_POST['meta']);
+		extract($_POST['sem_seo']);
 		
-		foreach ( array_keys(sem_seo_admin::get_fields('post_meta')) as $field ) {
+		foreach ( array_keys(sem_seo_admin::get_fields('meta')) as $field ) {
 			$$field = trim(strip_tags($$field));
 			if ( $$field )
 				update_post_meta($post_ID, '_' . $field, $$field);
