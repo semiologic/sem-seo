@@ -2,8 +2,8 @@
 /*
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
-Description: All in one SEO plugin for WordPress
-Version: 2.0 RC
+Description: All-in-one SEO plugin for WordPress
+Version: 2.0 RC2
 Author: Denis de Bernardy
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -18,6 +18,9 @@ This software is copyright Mesoconcepts and is distributed under the terms of th
 
 http://www.mesoconcepts.com/license/
 **/
+
+
+load_plugin_textdomain('sem-seo', false, dirname(plugin_basename(__FILE__)) . '/lang');
 
 
 /**
