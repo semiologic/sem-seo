@@ -251,8 +251,8 @@ class sem_seo_admin {
 	 * @return void
 	 **/
 
-	function save_entry($post_ID) {
-		if ( !isset($_POST['sem_seo']) || wp_is_post_revision($post_ID) )
+	function save_entry($post_id) {
+		if ( !isset($_POST['sem_seo']) || wp_is_post_revision($post_id) || !current_user_can('edit_post', $post_id) )
 			return;
 		
 		extract($_POST['sem_seo']);
@@ -260,9 +260,9 @@ class sem_seo_admin {
 		foreach ( array_keys(sem_seo_admin::get_fields('meta')) as $field ) {
 			$$field = trim(strip_tags($$field));
 			if ( $$field )
-				update_post_meta($post_ID, '_' . $field, $$field);
+				update_post_meta($post_id, '_' . $field, $$field);
 			else
-				delete_post_meta($post_ID, '_' . $field);
+				delete_post_meta($post_id, '_' . $field);
 		}
 	} # save_entry()
 	
