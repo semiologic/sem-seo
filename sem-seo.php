@@ -116,9 +116,8 @@ class sem_seo {
 		if ( $done )
 			return;
 		
-		$o = sem_seo::get_options();
-		
 		$done = true;
+		$o = sem_seo::get_options();
 		add_action('loop_end', array('sem_seo', 'archive_end'), 1000);
 		
 		if ( is_category() && $o['categories'] == 'excerpts'
@@ -159,7 +158,6 @@ class sem_seo {
 			return;
 		
 		$done = true;
-		
 		$o = sem_seo::get_options();
 		
 		if ( is_category() && $o['categories'] == 'excerpts'
@@ -491,7 +489,7 @@ class sem_seo {
 	function ob_google_start() {
 		static $done = false;
 		
-		if ( $done )
+		if ( $done || is_feed() )
 			return;
 		
 		ob_start(array('sem_seo', 'ob_google_filter'));
@@ -526,7 +524,7 @@ class sem_seo {
 	function ob_google_flush() {
 		static $done = false;
 		
-		if ( $done )
+		if ( $done || is_feed() )
 			return;
 		
 		ob_end_flush();
@@ -545,7 +543,7 @@ class sem_seo {
 	function google_start(&$wp_query) {
 		global $wp_the_query;
 		
-		if ( $wp_query !== $wp_the_query )
+		if ( $wp_query !== $wp_the_query || is_feed() )
 			return;
 		
 		echo "\n"
@@ -564,7 +562,7 @@ class sem_seo {
 	function google_end(&$wp_query) {
 		global $wp_the_query;
 		
-		if ( $wp_query !== $wp_the_query )
+		if ( $wp_query !== $wp_the_query || is_feed() )
 			return;
 		
 		echo "\n"
