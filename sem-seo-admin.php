@@ -5,9 +5,6 @@
  * @package Semiologic SEO
  **/
 
-add_action('settings_page_seo', array('sem_seo_admin', 'save_options'), 0);
-add_action('save_post', array('sem_seo_admin', 'save_entry'));
-
 class sem_seo_admin {
 	/**
 	 * save_options()
@@ -505,4 +502,7 @@ class sem_seo_admin {
 		echo '</ol>' . "\n";
 	} # crash_course()
 } # sem_seo_admin
+
+add_action('settings_page_seo', array('sem_seo_admin', 'save_options'), 0);
+add_action('save_post', array('sem_seo_admin', 'save_entry'));
 ?>

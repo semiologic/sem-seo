@@ -29,22 +29,6 @@ load_plugin_textdomain('sem-seo', false, dirname(plugin_basename(__FILE__)) . '/
  * @package Semiologic SEO
  **/
 
-add_action('wp', array('sem_seo', 'www_pref'));
-add_action('wp', array('sem_seo', 'home_slash_pref'));
-
-add_filter('wp_title', array('sem_seo', 'wp_title'), 1000, 3);
-add_action('wp_head', array('sem_seo', 'wp_head'), 0);
-
-add_action('wp_head', array('sem_seo', 'ob_google_start'), 10000);
-add_action('loop_start', array('sem_seo', 'google_start'), -10000);
-add_action('loop_end', array('sem_seo', 'google_end'), 10000);
-
-add_filter('query_string', array('sem_seo', 'archive_query_string'), 20);
-add_action('loop_start', array('sem_seo', 'archive_start'), -1000);
-
-add_action('admin_menu', array('sem_seo', 'admin_menu'));
-add_action('admin_menu', array('sem_seo', 'meta_boxes'), 30);
-
 class sem_seo {
 	/**
 	 * archive_query_string()
@@ -686,4 +670,21 @@ function seo_seo_admin() {
 
 foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'settings_page_seo') as $hook )
 	add_action("load-$hook", 'seo_seo_admin');
+
+
+add_action('wp', array('sem_seo', 'www_pref'));
+add_action('wp', array('sem_seo', 'home_slash_pref'));
+
+add_filter('wp_title', array('sem_seo', 'wp_title'), 1000, 3);
+add_action('wp_head', array('sem_seo', 'wp_head'), 0);
+
+add_action('wp_head', array('sem_seo', 'ob_google_start'), 10000);
+add_action('loop_start', array('sem_seo', 'google_start'), -10000);
+add_action('loop_end', array('sem_seo', 'google_end'), 10000);
+
+add_filter('query_string', array('sem_seo', 'archive_query_string'), 20);
+add_action('loop_start', array('sem_seo', 'archive_start'), -1000);
+
+add_action('admin_menu', array('sem_seo', 'admin_menu'));
+add_action('admin_menu', array('sem_seo', 'meta_boxes'), 30);
 ?>
