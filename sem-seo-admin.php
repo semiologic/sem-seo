@@ -136,6 +136,12 @@ class sem_seo_admin {
 		
 		echo '</table>' . "\n";
 		
+		echo '<p class="submit">'
+			. '<input type="submit"'
+				. ' value="' . esc_attr(__('Save Changes', 'sem-seo')) . '"'
+				. ' />'
+			. '</p>' . "\n";
+		
 		echo '<h3>'
 			. __('Archive Pages', 'sem-seo')
 			. '</h3>' . "\n";
