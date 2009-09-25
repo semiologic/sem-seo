@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: https://tickets.semiologic.com\n"
-"POT-Creation-Date: 2009-08-03 18:31+0200\n"
+"POT-Creation-Date: 2009-09-25 18:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,18 +28,22 @@ msgstr ""
 msgid "Title &amp; Meta"
 msgstr ""
 
-#: sem-seo-admin.php:140
+#: sem-seo-admin.php:141 sem-seo-admin.php:193
+msgid "Save Changes"
+msgstr ""
+
+#: sem-seo-admin.php:146
 msgid "Archive Pages"
 msgstr ""
 
-#: sem-seo-admin.php:144
+#: sem-seo-admin.php:150
 msgid ""
 "The general idea here is to prevent archive pages from outperforming your "
 "blog posts. Pages with very similar content on a site get clustered (see the "
 "SEO crash course further down)."
 msgstr ""
 
-#: sem-seo-admin.php:148
+#: sem-seo-admin.php:154
 msgid ""
 "By sticking to short excerpts or lists of post titles on archive pages, you "
 "prevent these pages from competing with your posts, while continuing to "
@@ -47,7 +51,7 @@ msgid ""
 "pages include category, tag, author and date archives."
 msgstr ""
 
-#: sem-seo-admin.php:152
+#: sem-seo-admin.php:158
 msgid ""
 "On most sites, you'll want to stick to the defaults: post excerpts on "
 "category pages, and lists of posts everywhere else. An exception might be a "
@@ -56,50 +60,46 @@ msgid ""
 "normal blog page for categories."
 msgstr ""
 
-#: sem-seo-admin.php:166
+#: sem-seo-admin.php:172
 msgid "Display a normal blog page"
 msgstr ""
 
-#: sem-seo-admin.php:167
+#: sem-seo-admin.php:173
 msgid "Display a normal blog page, but stick to excerpts"
 msgstr ""
 
-#: sem-seo-admin.php:168
+#: sem-seo-admin.php:174
 msgid "Display a list of post titles, grouped by date"
 msgstr ""
 
-#: sem-seo-admin.php:169
+#: sem-seo-admin.php:175
 msgid "Display a raw list of post titles, without dates"
 msgstr ""
 
-#: sem-seo-admin.php:187
-msgid "Save Changes"
-msgstr ""
-
-#: sem-seo-admin.php:277
+#: sem-seo-admin.php:283
 msgid "Title"
 msgstr ""
 
-#: sem-seo-admin.php:278
+#: sem-seo-admin.php:284
 msgid ""
 "The title field lets you override the &lt;title&gt; tag of the blog's main "
 "page. It defaults to the site's tagline (<a href=\"options-general.php"
 "\">Settings / General</a>)"
 msgstr ""
 
-#: sem-seo-admin.php:281
+#: sem-seo-admin.php:287
 msgid "Site Name"
 msgstr ""
 
-#: sem-seo-admin.php:282
+#: sem-seo-admin.php:288
 msgid "Append the name of the site to the title of each web page."
 msgstr ""
 
-#: sem-seo-admin.php:285
+#: sem-seo-admin.php:291
 msgid "Meta Keywords"
 msgstr ""
 
-#: sem-seo-admin.php:286
+#: sem-seo-admin.php:292
 msgid ""
 "The meta keywords field lets you override the &lt;meta name=&quot;"
 "keywords&quot;&gt; tag of blog pages. Given the uselessness of this field, "
@@ -107,11 +107,11 @@ msgid ""
 "and tags) of every entry on the web page."
 msgstr ""
 
-#: sem-seo-admin.php:289
+#: sem-seo-admin.php:295
 msgid "Meta Description"
 msgstr ""
 
-#: sem-seo-admin.php:290
+#: sem-seo-admin.php:296
 msgid ""
 "The meta description field lets you override the &lt;meta name=&quot;"
 "description&quot;&gt; tag of blog pages. Given the uselessness of this "
@@ -119,27 +119,27 @@ msgid ""
 "(<a href=\"options-general.php\">Settings / General</a>)."
 msgstr ""
 
-#: sem-seo-admin.php:293
+#: sem-seo-admin.php:299
 msgid "Category Archives"
 msgstr ""
 
-#: sem-seo-admin.php:296
+#: sem-seo-admin.php:302
 msgid "Tag Archives"
 msgstr ""
 
-#: sem-seo-admin.php:299
+#: sem-seo-admin.php:305
 msgid "Author Archives"
 msgstr ""
 
-#: sem-seo-admin.php:302
+#: sem-seo-admin.php:308
 msgid "Date Archives"
 msgstr ""
 
-#: sem-seo-admin.php:331
+#: sem-seo-admin.php:337
 msgid "SEO Crash Course"
 msgstr ""
 
-#: sem-seo-admin.php:335
+#: sem-seo-admin.php:341
 msgid ""
 "<strong>Note</strong>: What follows will occasionally contradict with what "
 "you'll hear in SEO forums, SEO blogs and from SEO celebrities. Keep in mind "
@@ -148,11 +148,11 @@ msgid ""
 "indexing algorithm works."
 msgstr ""
 
-#: sem-seo-admin.php:341
+#: sem-seo-admin.php:347
 msgid "The Basics"
 msgstr ""
 
-#: sem-seo-admin.php:345
+#: sem-seo-admin.php:351
 msgid ""
 "At the end of the day, the only thing that really counts is end-user "
 "experience. Deliver quality content, use the likes of Silo widgets and Nav "
@@ -160,7 +160,7 @@ msgid ""
 "your marketing and conversion rates."
 msgstr ""
 
-#: sem-seo-admin.php:349
+#: sem-seo-admin.php:355
 msgid ""
 "Your page's &lt;title&gt; tag is very important. In addition to being "
 "important from a semantic standpoint, it appears as the top line of the "
@@ -169,7 +169,7 @@ msgid ""
 "readers."
 msgstr ""
 
-#: sem-seo-admin.php:353
+#: sem-seo-admin.php:359
 msgid ""
 "Meta keyword and description fields are mostly useless from an indexing "
 "standpoint. Recall that Google's key innovation was to ignore them. If left "
@@ -178,7 +178,7 @@ msgid ""
 "meta description deserves a special note, however."
 msgstr ""
 
-#: sem-seo-admin.php:357
+#: sem-seo-admin.php:363
 msgid ""
 "Recent research suggests that the meta description field is used by Google "
 "to describe your page in search result listings when -- and only when -- a) "
@@ -187,7 +187,7 @@ msgid ""
 "teaser that will irresistibly lure those who read it onto your page."
 msgstr ""
 
-#: sem-seo-admin.php:361
+#: sem-seo-admin.php:367
 msgid ""
 "Link anchor text counts, as does their context. Picture Google as a "
 "gargantuan tagging engine where tags are the link texts, in the context of "
@@ -195,7 +195,7 @@ msgid ""
 "driven more by the need to eliminate spammy sites than anything."
 msgstr ""
 
-#: sem-seo-admin.php:365
+#: sem-seo-admin.php:371
 msgid ""
 "Links often get discounted, but in the end, inbound links <em>always</em> "
 "count -- even if in a negligible manner. It's much better to have a link "
@@ -203,14 +203,14 @@ msgid ""
 "the way.)"
 msgstr ""
 
-#: sem-seo-admin.php:369
+#: sem-seo-admin.php:375
 msgid ""
 "Your posts' and pages' introductions and conclusions also make a difference; "
 "don't neglect them, as they'll also enhance your site's readability. Split "
 "your content with h2/h3 tags if it's excessively long."
 msgstr ""
 
-#: sem-seo-admin.php:373
+#: sem-seo-admin.php:379
 msgid ""
 "The Semiologic and Semiologic Reloaded themes have heading tags, in sidebars "
 "for instance, that SEO forum regulars may (wrongly) find erroneous. This is "
@@ -219,7 +219,7 @@ msgid ""
 "elements."
 msgstr ""
 
-#: sem-seo-admin.php:377
+#: sem-seo-admin.php:383
 msgid ""
 "New and/or updated content counts, and that is one of the reasons blogs fare "
 "well in search engines. While a small update can give a boost to your "
@@ -229,7 +229,7 @@ msgid ""
 "defaults."
 msgstr ""
 
-#: sem-seo-admin.php:381
+#: sem-seo-admin.php:387
 msgid ""
 "Your keywords can be noise words just as much as &quot;in&quot;, &quot;"
 "the&quot;, &quot;a&quot;, etc. if you abuse their usage. To perceive a black "
@@ -239,18 +239,18 @@ msgid ""
 "amplitude."
 msgstr ""
 
-#: sem-seo-admin.php:385
+#: sem-seo-admin.php:391
 msgid ""
 "Pick your fights. Uncompetitive keywords are easier to conquer, and these "
 "small victories will ultimately give you an edge when fighting the more "
 "harder battles."
 msgstr ""
 
-#: sem-seo-admin.php:392
+#: sem-seo-admin.php:398
 msgid "On Duplicate Content"
 msgstr ""
 
-#: sem-seo-admin.php:396
+#: sem-seo-admin.php:402
 msgid ""
 "Duplicate content issues on third party sites are very real. Fight content "
 "theft by either putting your key content on static pages (which don't show "
@@ -258,7 +258,7 @@ msgid ""
 "plagiarize content from third party sites using RSS aggregators."
 msgstr ""
 
-#: sem-seo-admin.php:400
+#: sem-seo-admin.php:406
 msgid ""
 "Duplicate content &quot;issues&quot; on your own site are a <a href=\"http://"
 "www.semiologic.com/resources/seo/demystifying-duplicate-content/\">fallacy</"
@@ -269,7 +269,7 @@ msgid ""
 "excerpts on archive pages."
 msgstr ""
 
-#: sem-seo-admin.php:404
+#: sem-seo-admin.php:410
 msgid ""
 "<strong>Stand clear of &quot;SEO&quot; plugins that &quot;deal&quot; with "
 "duplicate content issues by unindexing pages on your site</strong>. You can "
@@ -279,7 +279,7 @@ msgid ""
 "strong> preferrable."
 msgstr ""
 
-#: sem-seo-admin.php:408
+#: sem-seo-admin.php:414
 msgid ""
 "In addition to being useless, adding nofollow attributes to internal links "
 "is a sure way to ultimately get your site penalized on grounds that you're "
@@ -288,11 +288,11 @@ msgid ""
 "contents. Use it as such."
 msgstr ""
 
-#: sem-seo-admin.php:415
+#: sem-seo-admin.php:421
 msgid "On Links"
 msgstr ""
 
-#: sem-seo-admin.php:419
+#: sem-seo-admin.php:425
 msgid ""
 "Don't give too much attention to the number of links in your pages' cosmetic "
 "and navigation areas (i.e. header, sidebar, footer). It is <strong>trivial</"
@@ -301,21 +301,21 @@ msgid ""
 "between them will reveal where the real content is located."
 msgstr ""
 
-#: sem-seo-admin.php:423
+#: sem-seo-admin.php:429
 msgid ""
 "The links that really count are those in your content, surrounded by "
 "context. Add links to your posts and pages within the contents of your posts "
 "and pages."
 msgstr ""
 
-#: sem-seo-admin.php:427
+#: sem-seo-admin.php:433
 msgid ""
 "The number of outbound links on your pages can have an impact, because "
 "spammers have been abusing it. But unless your page starts to feel like a "
 "link directory, you've nothing to worry about."
 msgstr ""
 
-#: sem-seo-admin.php:431
+#: sem-seo-admin.php:437
 msgid ""
 "The rate at which you gain inbound links can have an impact, because "
 "spammers have been abusing it. If it looks like you're comment spamming the "
@@ -323,7 +323,7 @@ msgid ""
 "better than a massive, one-off stream of new links."
 msgstr ""
 
-#: sem-seo-admin.php:435
+#: sem-seo-admin.php:441
 msgid ""
 "On the topic of link exchanges, page a on site A linking to page b on site B "
 "and reciprocally is easily detected and discounted. Page a on site A linking "
@@ -331,18 +331,18 @@ msgid ""
 "much harder to detect."
 msgstr ""
 
-#: sem-seo-admin.php:439
+#: sem-seo-admin.php:445
 msgid ""
 "Concluding on the last couple of points, better a single link in the content "
 "of an authoritative page than a site-wide link in the footer or sidebar of "
 "an unauthoritative site."
 msgstr ""
 
-#: sem-seo-admin.php:446
+#: sem-seo-admin.php:452
 msgid "On Pinging And Performance"
 msgstr ""
 
-#: sem-seo-admin.php:450
+#: sem-seo-admin.php:456
 msgid ""
 "XML sitemaps are useful to the extent that they'll get your site indexed "
 "<em>faster</em>. The XML sitemaps specs say that the (optional) link "
@@ -350,7 +350,7 @@ msgid ""
 "impact on how <em>well</em> individual pages on your site will get indexed."
 msgstr ""
 
-#: sem-seo-admin.php:454
+#: sem-seo-admin.php:460
 msgid ""
 "Performance counts. A huge ping list can have a severe performance impact on "
 "your site, and harm your rankings by degrading your server's response time. "
@@ -360,7 +360,7 @@ msgid ""
 "already throttled in WordPress."
 msgstr ""
 
-#: sem-seo-admin.php:458
+#: sem-seo-admin.php:464
 msgid ""
 "Some permalink structures (<a href=\"options-permalink.php\">Settings / "
 "Permalinks</a>) have a negative impact on your site's performance. Worst "
@@ -371,11 +371,11 @@ msgid ""
 "being the best for usability."
 msgstr ""
 
-#: sem-seo-admin.php:465
+#: sem-seo-admin.php:471
 msgid "On End-User Feedback"
 msgstr ""
 
-#: sem-seo-admin.php:469
+#: sem-seo-admin.php:475
 msgid ""
 "Search engines are increasingly taking end-user feedback into account. "
 "Consider how these potential feedback loops can give indications to Google "
@@ -386,7 +386,7 @@ msgid ""
 "same), AdSense (the same)."
 msgstr ""
 
-#: sem-seo-admin.php:473
+#: sem-seo-admin.php:479
 msgid ""
 "Until 1995, people would start by asking their contacts when they searched "
 "for information. Now, consider how search has evolved in the past years, and "
@@ -395,11 +395,11 @@ msgid ""
 "people you don't know. Keep this in mind while you market your site."
 msgstr ""
 
-#: sem-seo-admin.php:480
+#: sem-seo-admin.php:486
 msgid "Concluding Notes"
 msgstr ""
 
-#: sem-seo-admin.php:484
+#: sem-seo-admin.php:490
 msgid ""
 "Always keep this in mind that there is a conflict of interest in a search "
 "engine's business model. <strong>Google's better interest is to return &quot;"
@@ -408,7 +408,7 @@ msgid ""
 "traffic."
 msgstr ""
 
-#: sem-seo-admin.php:488
+#: sem-seo-admin.php:494
 msgid ""
 "As a rule, view your search engine traffic as a bonus, and focus on "
 "alternative sources of traffic, such as mailing lists, affiliate networks, "
@@ -416,7 +416,7 @@ msgid ""
 "forums), etc."
 msgstr ""
 
-#: sem-seo-admin.php:492
+#: sem-seo-admin.php:498
 msgid ""
 "The only thing that really counts at the end of the day is end-user "
 "experience. Deliver quality content, use the likes of Silo widgets and Nav "
@@ -424,7 +424,7 @@ msgid ""
 "your marketing and conversion rates."
 msgstr ""
 
-#: sem-seo-admin.php:496
+#: sem-seo-admin.php:502
 msgid ""
 "Special Note: If you're seeking to optimize Ad revenue, don't make your site "
 "&quot;too&quot; navigable: at the end of your page, you want users to click "
