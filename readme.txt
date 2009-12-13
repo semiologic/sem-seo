@@ -46,6 +46,10 @@ Alternatively, email sales at semiologic dot com.
 
 == Change Log ==
 
+= 2.0.1 =
+
+- Apply filters to permalinks
+
 = 2.0 =
 
 - Complete Rewrite
