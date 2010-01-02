@@ -50,6 +50,7 @@ Alternatively, email sales at semiologic dot com.
 
 - Apply filters to permalinks
 - Rel=canonical improvements
+- Canonical redirect improvements
 
 = 2.0 =
 

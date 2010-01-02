@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: All-in-one SEO plugin for WordPress
-Version: 2.0.1 RC2
+Version: 2.0.1 RC3
 Author: Denis de Bernardy
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -330,9 +330,9 @@ class sem_seo {
 			return;
 		
 		global $wp_the_query;
-		$redirect = false;
+		$permalink = apply_filters('the_permalink', get_permalink($wp_the_query->get_queried_object_id()));
 		if ( $page == 1 ) {
-			wp_redirect(apply_filters('the_permalink', get_permalink($wp_the_query->get_queried_object_id())));
+			wp_redirect($permalink, 301);
 			die;
 		} else {
 			global $post;
@@ -342,11 +342,49 @@ class sem_seo {
 				setup_postdata($post);
 			}
 			if ( count($pages) < $page ) {
-				wp_redirect(apply_filters('the_permalink', get_permalink($wp_the_query->get_queried_object_id())));
+				wp_redirect($permalink, 301);
 				die;
 			}
 		}
 	} # paginated_post()
+	
+	
+	/**
+	 * paginate_archive()
+	 *
+	 * @return void
+	 **/
+
+	function paginated_archive() {
+		if ( is_singular() || is_404() || is_search() )
+			return;
+		
+		$paged = get_query_var('paged');
+		if ( !$paged )
+			return;
+		
+		global $wp_the_query;
+		
+		if ( $paged == 1 || $paged > $wp_the_query->max_num_pages ) {
+			if ( is_front_page() ) {
+				$url = user_trailingslashit(get_option('home'));
+				wp_redirect($url, 301);
+				die;
+			} else {
+				$url = ( is_ssl() ? 'https://' : 'http://' )
+					. $_SERVER['HTTP_HOST']
+					. $_SERVER['REQUEST_URI'];
+				
+				if ( !get_option('permalink_structure') ) {
+					$url = str_replace('&paged=' . $paged, '', $url);
+				} else {
+					$url = str_replace('/page/' . $paged, '', $url);
+				}
+				wp_redirect($url, 301);
+				die;
+			}
+		}
+	} # paginated_archive()
 	
 	
 	/**
@@ -715,9 +753,10 @@ foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'setting
 	add_action("load-$hook", 'seo_seo_admin');
 
 
-add_action('wp', array('sem_seo', 'www_pref'));
-add_action('wp', array('sem_seo', 'home_slash_pref'));
-add_action('wp', array('sem_seo', 'paginated_post'));
+add_action('wp', array('sem_seo', 'www_pref'), -10);
+add_action('wp', array('sem_seo', 'home_slash_pref'), -10);
+add_action('wp', array('sem_seo', 'paginated_post'), -10);
+add_action('wp', array('sem_seo', 'paginated_archive'), -10);
 
 add_filter('wp_title', array('sem_seo', 'wp_title'), 1000, 3);
 add_action('wp_head', array('sem_seo', 'wp_head'), 0);
