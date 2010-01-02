@@ -282,7 +282,7 @@ class sem_seo {
 		 	|| strpos($host, 'www.') === false && strpos($site_url, '://www.') !== false
 			) {
 			$root = get_option('siteurl');
-			preg_match("|(.+://[^/]+)|", $root, $root);
+			preg_match("|^([^/]+://[^/]+)|", $root, $root);
 			$root = end($root);
 			
 			wp_redirect($root . $_SERVER['REQUEST_URI'], 301);
