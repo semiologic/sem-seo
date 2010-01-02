@@ -292,29 +292,6 @@ class sem_seo {
 	
 	
 	/**
-	 * home_slash_pref()
-	 *
-	 * @return void
-	 **/
-
-	function home_slash_pref() {
-		if ( !is_front_page() || is_paged() )
-			return;
-
-		$home_url = user_trailingslashit(get_option('home'));
-		$home_path = parse_url($home_url);
-		$home_path = $home_path['path'];
-		$request_path = parse_url($_SERVER['REQUEST_URI']);
-		$request_path = $request_path['path'];
-		
-		if ( rtrim($request_path, '/') != rtrim($home_path, '/') ) {
-			wp_redirect($home_url, 301);
-			die;
-		}
-	} # home_slash_pref()
-	
-	
-	/**
 	 * paginated_post()
 	 *
 	 * @return void
@@ -754,7 +731,6 @@ foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'setting
 
 
 add_action('wp', array('sem_seo', 'www_pref'), -10);
-add_action('wp', array('sem_seo', 'home_slash_pref'), -10);
 add_action('wp', array('sem_seo', 'paginated_post'), -10);
 add_action('wp', array('sem_seo', 'paginated_archive'), -10);
 
