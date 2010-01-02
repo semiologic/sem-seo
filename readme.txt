@@ -49,6 +49,7 @@ Alternatively, email sales at semiologic dot com.
 = 2.0.1 =
 
 - Apply filters to permalinks
+- Rel=canonical improvements
 
 = 2.0 =
 

@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: All-in-one SEO plugin for WordPress
-Version: 2.0.1 RC
+Version: 2.0.1 RC2
 Author: Denis de Bernardy
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -315,6 +315,41 @@ class sem_seo {
 	
 	
 	/**
+	 * paginated_post()
+	 *
+	 * @return void
+	 **/
+
+	function paginated_post() {
+		if ( !is_singular() )
+			return;
+		
+		$page = get_query_var('page');
+		
+		if ( !$page )
+			return;
+		
+		global $wp_the_query;
+		$redirect = false;
+		if ( $page == 1 ) {
+			wp_redirect(apply_filters('the_permalink', get_permalink($wp_the_query->get_queried_object_id())));
+			die;
+		} else {
+			global $post;
+			global $pages;
+			if ( !is_object($post) ) {
+				$post = $wp_the_query->posts[0];
+				setup_postdata($post);
+			}
+			if ( count($pages) < $page ) {
+				wp_redirect(apply_filters('the_permalink', get_permalink($wp_the_query->get_queried_object_id())));
+				die;
+			}
+		}
+	} # paginated_post()
+	
+	
+	/**
 	 * wp_title
 	 *
 	 * @param string $title
@@ -413,7 +448,16 @@ class sem_seo {
 		}
 		
 		if ( is_singular() ) {
-			$url = apply_filters('the_permalink', get_permalink($wp_the_query->get_queried_object_id()));
+			global $post;
+			if ( $post->ID != $wp_the_query->get_queried_object_id() )
+				setup_postdata($wp_the_query->posts[0]);
+			$url = apply_filters('the_permalink', get_permalink($post->ID));
+			if ( $page = get_query_var('page') ) {
+				if ( !get_option('permalink_structure') )
+					$url .= '&page=' . $page;
+				else
+					$url = trailingslashit($url) . user_trailingslashit($page, 'single_paged');
+			}
 			echo '<link rel="canonical" href="' . esc_url($url) . '" />' . "\n";
 		}
 	} # wp_head()
@@ -673,6 +717,7 @@ foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'setting
 
 add_action('wp', array('sem_seo', 'www_pref'));
 add_action('wp', array('sem_seo', 'home_slash_pref'));
+add_action('wp', array('sem_seo', 'paginated_post'));
 
 add_filter('wp_title', array('sem_seo', 'wp_title'), 1000, 3);
 add_action('wp_head', array('sem_seo', 'wp_head'), 0);
