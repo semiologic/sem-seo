@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: All-in-one SEO plugin for WordPress
-Version: 2.0.1 RC3
+Version: 2.0.1 RC4
 Author: Denis de Bernardy
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -731,8 +731,10 @@ foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'setting
 
 
 add_action('wp', array('sem_seo', 'www_pref'), -10);
-add_action('wp', array('sem_seo', 'paginated_post'), -10);
-add_action('wp', array('sem_seo', 'paginated_archive'), -10);
+if ( !is_admin() ) {
+	add_action('wp', array('sem_seo', 'paginated_post'), -10);
+	add_action('wp', array('sem_seo', 'paginated_archive'), -10);
+}
 
 add_filter('wp_title', array('sem_seo', 'wp_title'), 1000, 3);
 add_action('wp_head', array('sem_seo', 'wp_head'), 0);
