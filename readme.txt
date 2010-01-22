@@ -46,6 +46,10 @@ Alternatively, email sales at semiologic dot com.
 
 == Change Log ==
 
+= 2.0.2 =
+
+- Further canonical redirect improvements
+
 = 2.0.1 =
 
 - Apply filters to permalinks
