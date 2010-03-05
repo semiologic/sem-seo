@@ -120,7 +120,7 @@ class sem_seo_admin {
 					. '<td>'
 					. '<label>'
 					. '<input type="checkbox" name="' . $field . '"'
-						. ( $options[$field]
+						. ( !empty($options[$field])
 							? ' checked="checked"'
 							: ''
 							)
