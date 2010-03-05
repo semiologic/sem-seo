@@ -383,7 +383,7 @@ class sem_seo {
 		$o = sem_seo::get_options();
 		
 		$title = trim($title);
-		$site_name = $o['add_site_name'] ? get_option('blogname') : false;
+		$site_name = !empty($o['add_site_name']) ? get_option('blogname') : false;
 		
 		if ( is_singular() || $wp_the_query->is_posts_page )
 			$post_id = $wp_the_query->get_queried_object_id();
