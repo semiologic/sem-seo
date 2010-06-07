@@ -46,6 +46,10 @@ Alternatively, email sales at semiologic dot com.
 
 == Change Log ==
 
+= 2.0.3 =
+
+- Fix description handler on non-existent terms
+
 = 2.0.2 =
 
 - Further canonical redirect improvements
