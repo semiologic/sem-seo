@@ -25,9 +25,12 @@ class sem_seo_admin {
 			case 'title':
 			case 'keywords':
 			case 'description':
+                        case 'google_plus_publisher':
 				$$field = trim(strip_tags(stripslashes($_POST[$field])));
 				break;
-			
+			case 'google_plus_author':
+                                $$field = $_POST[$field];
+                                break;
 			default:
 				$$field = isset($_POST[$field]);
 				break;
@@ -52,6 +55,8 @@ class sem_seo_admin {
 				. '</strong>'
 			. '</p>' . "\n"
 			. '</div>' . "\n";
+                
+                do_action('update_option_sem_seo');
 	} # save_options()
 	
 	
@@ -98,7 +103,8 @@ class sem_seo_admin {
 				break;
 
 			case 'title':
-			case 'keywords':
+			case 'keywords':                         
+                        case 'google_plus_publisher':
 				echo '<tr valign="top">'
 					. '<th scope="row">'
 					. $details['label']
@@ -111,7 +117,26 @@ class sem_seo_admin {
 					. '</td>'
 					. '</tr>' . "\n";
 				break;
-			
+
+                         case 'google_plus_author':   
+                             	echo '<tr valign="top">'
+                                    . '<th scope="row">'
+                                    . $details['label']
+                                    . '</th>'
+                                    . '<td>';
+                             
+                                wp_dropdown_users( array( 
+                                    'show_option_none' => "Don't show", 
+                                    'class' => 'select', 
+                                    'name' => 'google_plus_author', 
+                                    'selected' => isset( $options['google_plus_author'] ) ? $options['google_plus_author'] : ''
+                                    ) );
+                                
+				echo $details['desc'] . "\n"
+                                    .'</td>'
+                                    . '</tr>' . "\n";
+                                break;
+                            
 			default:
 				echo '<tr valign="top">'
 					. '<th scope="row">'
@@ -307,17 +332,27 @@ class sem_seo_admin {
 			'dates' => array(
 					'label' => __('Date Archives', 'sem-seo'),
 					),
+                        'google_plus_author' => array(
+					'label' => __('Google Plus Authorship', 'sem-seo'),
+                                        'desc' => '<p>' . __('Choose the user that should be used for the <code>rel="author"</code> on the blog homepage. Make sure the user has filled out his/her Google+ profile link on their profile page.', 'sem-seo') . '</p>' . "\n",
+					
+					),
+                        'google_plus_publisher' => array(
+					'label' => __('Google Publisher Page', 'sem-seo'),
+                                        'desc' => '<p>' . __('If you have a Google+ page for your business, add that URL here and link it on your Google+ page\'s about page.', 'sem-seo') . '</p>' . "\n",					
+					),   
 			);
-		
+             
+                
 		$_fields = array();
 		
 		if ( $context == 'meta' ) {
 			foreach ( array('title', 'keywords', 'description') as $field )
 				$_fields[$field] = $fields[$field];
 		} elseif ( $context == 'ext_meta' ) {
-			foreach ( array('title', 'add_site_name', 'keywords', 'description') as $field )
+			foreach ( array('title', 'add_site_name', 'keywords', 'description', 'google_plus_author', 'google_plus_publisher') as $field )
 				$_fields[$field] = $fields[$field];
-		} elseif ( $context = 'archives' ) {
+		} elseif ( $context == 'archives' ) {
 			foreach ( array('categories', 'tags', 'authors', 'dates') as $field )
 				$_fields[$field] = $fields[$field];
 		}
@@ -507,8 +542,11 @@ class sem_seo_admin {
 		
 		echo '</ol>' . "\n";
 	} # crash_course()
-} # sem_seo_admin
 
+
+} # sem_seo_admin
+        
 add_action('settings_page_seo', array('sem_seo_admin', 'save_options'), 0);
 add_action('save_post', array('sem_seo_admin', 'save_entry'));
+
 ?>

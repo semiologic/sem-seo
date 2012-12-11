@@ -3,8 +3,8 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: All-in-one SEO plugin for WordPress
-Version: 2.0.4
-Author: Denis de Bernardy
+Version: 2.1
+Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
 Domain Path: /lang
@@ -409,7 +409,12 @@ class sem_seo {
 		
 		if ( $site_name )
 			$title = "$title | $site_name";
-		
+                
+                $paged = get_query_var('paged');
+                if ( $paged  ) {
+                    $title = "$title | Page $paged";                       
+                }
+                
 		return $title;
 	} # wp_title()
 	
@@ -465,22 +470,73 @@ class sem_seo {
 				echo '<meta name="' . $var . '" content="' . esc_attr($$var) . '" />' . "\n";
 		}
 		
-		if ( is_singular() ) {
-			global $post;
-			if ( $post->ID != $wp_the_query->get_queried_object_id() )
-				setup_postdata($wp_the_query->posts[0]);
-			$url = apply_filters('the_permalink', get_permalink($post->ID));
-			if ( $page = get_query_var('page') ) {
-				if ( !get_option('permalink_structure') )
-					$url .= '&page=' . $page;
-				else
-					$url = trailingslashit($url) . user_trailingslashit($page, 'single_paged');
-			}
-			echo '<link rel="canonical" href="' . esc_url($url) . '" />' . "\n";
+                $canonical = sem_seo::get_canonical();
+                if ($canonical) {
+			echo '<link rel="canonical" href="' . esc_url($canonical) . '" />' . "\n";
 		}
+                
+                // display google authorship
+                sem_seo::add_authorship();
+                
+ //               sem_seo::add_opengraph_meta();
+                
 	} # wp_head()
 	
-	
+
+    	/**
+	 * get_canonical()
+	 *
+	 * @return string canonical url
+	 **/    
+        function get_canonical() {
+            
+            global $wp_the_query;
+            
+            $canonical = false;
+            
+            if ( is_singular() ) {
+                global $post;
+                if ( $post->ID != $wp_the_query->get_queried_object_id() )
+                    setup_postdata($wp_the_query->posts[0]);
+                $url = apply_filters('the_permalink', get_permalink($post->ID));
+                $page = get_query_var('page');
+                if ( $page ) {
+                    if ( !get_option('permalink_structure') )
+                        $url .= '&page=' . $page;
+                    else
+                        $url = trailingslashit($url) . user_trailingslashit($page, 'single_paged');
+                }
+                $canonical = $url;
+
+            } else {
+                if ( is_search() ) {
+                    $canonical = get_search_link();
+                } else if ( is_front_page() ) {
+                    $canonical = home_url( '/' );
+                } else if ( is_tax() || is_tag() || is_category() ) {
+                    $term      = get_queried_object();
+                    $canonical = get_term_link( $term, $term->taxonomy );
+                } else if ( function_exists( 'get_post_type_archive_link' ) && is_post_type_archive() ) {
+                    $canonical = get_post_type_archive_link( get_post_type() );
+                } else if ( is_author() ) {
+                    $canonical = get_author_posts_url( get_query_var( 'author' ), get_query_var( 'author_name' ) );
+                } else if ( is_archive() ) {
+                    if ( is_date() ) {
+                        if ( is_day() ) {
+                            $canonical = get_day_link( get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+                        } else if ( is_month() ) {
+                            $canonical = get_month_link( get_query_var( 'year' ), get_query_var( 'monthnum' ) );
+                        } else if ( is_year() ) {
+                            $canonical = get_year_link( get_query_var( 'year' ) );
+                        }
+                    }
+                }
+            }
+
+            return $canonical;
+        } # get_canonical()
+        
+        
 	/**
 	 * get_keywords()
 	 *
@@ -550,7 +606,7 @@ class sem_seo {
 	 * @return string $text
 	 **/
 
-	function ob_google_filter($text) {
+	static function ob_google_filter($text) {
 		$text = preg_replace("/
 			^.*?
 			<\s*body(?:\s.*?)>
@@ -629,7 +685,7 @@ class sem_seo {
 			return $o;
 		
 		$o = get_option('sem_seo');
-		
+		                
 		if ( $o === false || isset($o['archives']) )
 			$o = sem_seo::init_options();
 		
@@ -655,6 +711,8 @@ class sem_seo {
 			'tags' => 'list',
 			'authors' => 'list',
 			'dates' => 'list',
+                        'google_plus_publisher' => '',
+                        'google_plus_author' => '0',
 			);
 		
 		if ( !$o ) {
@@ -682,7 +740,15 @@ class sem_seo {
 			
 			extract($o, EXTR_SKIP);
 			$o = compact(array_keys($defaults));
-		} else {
+                } elseif ( !isset($o['google_plus_author']) ) {   
+                        $o = wp_parse_args($o, $defaults);
+                        
+                        $o['google_plus_publisher'] = '';
+                        $o['google_plus_author'] = '0';   
+                        
+			extract($o, EXTR_SKIP);
+			$o = compact(array_keys($defaults));                        
+                } else {
 			$o = $defaults;
 		}
 		
@@ -722,9 +788,117 @@ class sem_seo {
 		if ( current_user_can('edit_pages') )
 			add_meta_box('sem_seo_admin', __('Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'page');
 	} # meta_boxes()
+        
+         /**
+	 * update_contactmethods()
+	 *
+	 * @param object $contactmethods
+	 * @return object $contactmethods
+	 **/
+        
+        function update_contactmethods( $contactmethods ) {
+		// Add Google+
+		$contactmethods['googleplus'] = 'Google+';
+		// Add Twitter
+		$contactmethods['twitter'] = __( 'Twitter', 'sem-seo' );
+		// Add Facebook
+		$contactmethods['facebook'] = __( 'Facebook', 'sem-seo' );
+                // Add LinkedIn
+		$contactmethods['linkedin'] = __( 'LinkedIn', 'sem-seo' );
+                
+		return $contactmethods;
+	} # update_contactmethods()
+        
+        
+         /**
+	 * add_authorship()
+	 *
+	 * @param void
+	 * @return void
+	 **/
+        function add_authorship() {
+            $gplus   = false;
+            $options = sem_seo::get_options();
+
+            if ( is_singular() ) {
+                    global $post;
+                    $gplus = get_the_author_meta( 'googleplus', $post->post_author );
+            } else if ( is_home() ) {
+                    if ( isset( $options['google_plus_author'] ) )
+                            $gplus = get_the_author_meta( 'googleplus', $options['google_plus_author'] );
+            }
+
+//		$gplus = apply_filters( 'wpseo_author_link', $gplus );
+
+            if ( $gplus )
+                    echo '<link rel="author" href="' . $gplus . '"/>' . "\n";
+
+            if ( is_front_page() && isset( $options['google_plus_publisher'] ) && !empty( $options['google_plus_publisher'] ) ) {
+                    echo '<link rel="publisher" href="' . esc_attr( $options['google_plus_publisher'] ) . '"/>' . "\n";
+            }        
+        } # add_authorship()
+                
+                
+         /**
+	 * set_author_url()
+	 *
+	 * @param void
+	 * @return void
+	 **/
+        function set_author_url($url) {
+ //           if (empty($url)) {
+            
+                $author_page_url = get_author_posts_url(get_the_author_meta( 'ID' ));
+                if (!empty($author_page_url)) {
+                    $url = $author_page_url;               
+                }
+//           }
+            
+            return $url;
+	} # set_author_url()
+
+        
+        
+	/**
+	 * Filter for the namespace, adding the OpenGraph namespace.
+	 *
+	 * @param string $input The input namespace string.
+	 * @return string
+	 */
+	function add_opengraph_namespace( $input ) {
+		return $input . ' xmlns:og="http://opengraphprotocol.org/schema/"';
+                // prefix="og: http://ogp.me/ns#"
+	}    
+        
+ 	/**
+	 * Add OpenGraph meta data to head.
+	 *
+	 * @param void
+	 * @return void
+	 */       
+        function add_opengraph_meta() {
+            $og_title = '<meta property="og:title" content="' . esc_attr( get_the_title() ) . '" />' . "\n";
+            $og_type = '<meta property="og:type" content="website" />' . "\n";
+            $og_sitename ="<meta property='og:site_name' content='" . esc_attr( get_bloginfo( 'name' ) ) . "'/>\n";   
+            $og_url = '<meta property="og:url" content="' . sem_seo::get_canonical() . '" />' . "\n";    
+            $og_image = '';
+            $og_description = '';
+            
+            if ( is_singular() ) {
+                global $post;
+                setup_postdata( $post );
+                $og_type = '<meta property="og:type" content="article" />' . "\n";               
+                $og_url = '<meta property="og:url" content="' . get_permalink() . '" />' . "\n";
+                $og_description = '<meta property="og:description" content="' . esc_attr( get_the_excerpt() ) . '" />' . "\n";
+                if ( has_post_thumbnail() ) {
+                    $imgsrc = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'medium' );
+                    $og_image = '<meta property="og:image" content="' . $imgsrc[0] . '" />' . "\n";
+                }             
+            }
+             echo $og_type . $og_title . $og_sitename . $og_url . $og_description . $og_image;
+        }
 } # sem_seo
-
-
+        
 function seo_seo_admin() {
 	include_once dirname(__FILE__) . '/sem-seo-admin.php';
 }
@@ -752,5 +926,10 @@ add_action('loop_start', array('sem_seo', 'archive_start'), -1000);
 add_action('admin_menu', array('sem_seo', 'admin_menu'));
 add_action('admin_menu', array('sem_seo', 'meta_boxes'), 30);
 
+add_filter('user_contactmethods', array('sem_seo', 'update_contactmethods'));
+add_filter('the_author_url', array('sem_seo', 'set_author_url'));
+// add_filter( 'language_attributes', array( 'sem_seo', 'add_opengraph_namespace' ) );
+
 remove_action('wp_head', 'rel_canonical'); 
+
 ?>

@@ -2,8 +2,8 @@
 Contributors: Denis-de-Bernardy
 Donate link: http://www.semiologic.com/partners/
 Tags: semiologic
-Requires at least: 2.8
-Tested up to: 3.2.1
+Requires at least: 3.0
+Tested up to: 3.5
 Stable tag: trunk
 
 An SEO plugin for WordPress.
@@ -25,6 +25,7 @@ This SEO plugin in particular covers the following:
 - Meta keyword/description tags
 - Canonical URL tags
 - Various duplicate content worries
+- Google+ Authorship
 - A few other points, when combined with the Semiologic theme, such as putting the page's content forward
 
 The plugin also features an SEO crash course under Settings / SEO once active, and you'll find additional SEO resources in the semiologic.com's members' area as well as its resources section, so I won't be expanding on the specifics or the details here.
@@ -44,6 +45,15 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 2.1 =
+
+- Google+ authorship inc. new Profile contact fields
+- Fixed duplicate titles on archive type page 2+
+- Additional rel=canonical entries for home and archive type pages
+- Add link to author page for pages/posts
+- Fix: Sem-cache now flushed on SEO options change
+- Fix: Silence PHP warning for ob_start call
+ 
 = 2.0.4 =
 
 - WP 3.0.1 compat
