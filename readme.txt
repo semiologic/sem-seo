@@ -1,9 +1,9 @@
 === Semiologic SEO ===
-Contributors: Denis-de-Bernardy
+Contributors: Denis-de-Bernardy, Mike_Koepke
 Donate link: http://www.semiologic.com/partners/
 Tags: semiologic
 Requires at least: 3.0
-Tested up to: 3.5
+Tested up to: 3.5.1
 Stable tag: trunk
 
 An SEO plugin for WordPress.
@@ -47,7 +47,7 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 = 2.1.1 =
 
-- Remove author link code with support now in semiologic-reloaded theme
+- Remove author link code with support now in Semiologic-Reloaded theme
 
 = 2.1 =
 
