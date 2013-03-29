@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: All-in-one SEO plugin for WordPress
-Version: 2.1.1
+Version: 2.2
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -33,7 +33,8 @@ class sem_seo {
 	/**
 	 * archive_query_string()
 	 *
-	 * @return void
+     * @param string
+	 * @return string
 	 **/
 
 	function archive_query_string($query_string) {
@@ -161,14 +162,14 @@ class sem_seo {
 			sem_seo::archive_titles();
 		}
 	} # archive_end()
-	
-	
-	/**
-	 * archive_excerpts()
-	 *
-	 * @param $text
-	 * @return $text
-	 **/
+
+
+    /**
+     * archive_excerpts()
+     *
+     * @param $text
+     * @return mixed|void $text
+     */
 
 	function archive_excerpts($text) {
 		global $wp_filter;
@@ -385,7 +386,7 @@ class sem_seo {
 		$title = trim($title);
 		$site_name = !empty($o['add_site_name']) ? get_option('blogname') : false;
 		
-		if ( is_singular() || $wp_the_query->is_posts_page )
+		if ( is_singular() || sem_seo::is_posts_page() )
 			$post_id = $wp_the_query->get_queried_object_id();
 		else
 			$post_id = false;
@@ -410,10 +411,10 @@ class sem_seo {
 		if ( $site_name )
 			$title = "$title | $site_name";
                 
-                $paged = get_query_var('paged');
-                if ( $paged  ) {
-                    $title = "$title | Page $paged";                       
-                }
+        $paged = get_query_var('paged');
+        if ( $paged  ) {
+            $title = "$title | Page $paged";
+        }
                 
 		return $title;
 	} # wp_title()
@@ -433,7 +434,7 @@ class sem_seo {
 		
 		$o = sem_seo::get_options();
 		
-		if ( is_singular() || $wp_the_query->is_posts_page )
+		if ( is_singular() || sem_seo::is_posts_page() )
 			$post_id = $wp_the_query->get_queried_object_id();
 		else
 			$post_id = false;
@@ -459,7 +460,11 @@ class sem_seo {
 				$description = get_term_field('description', get_query_var('cat'), 'category');
 			} elseif ( is_tag() ) {
 				$description = get_term_field('description', get_query_var('tag_id'), 'post_tag');
-			}
+//            } elseif ( is_single() || is_page() ) {
+//                $description = sem_seo::get_the_excerpt_rss();
+			} elseif ( is_home() || is_front_page() ) {
+                $description = get_option('blogdescription');
+            }
 			$description = !is_wp_error($description)
 				? trim(strip_tags($description))
 				: '';
@@ -470,14 +475,14 @@ class sem_seo {
 				echo '<meta name="' . $var . '" content="' . esc_attr($$var) . '" />' . "\n";
 		}
 		
-                $canonical = sem_seo::get_canonical();
-                if ($canonical) {
+        $canonical = sem_seo::get_canonical();
+        if ($canonical) {
 			echo '<link rel="canonical" href="' . esc_url($canonical) . '" />' . "\n";
 		}
                 
-                // display google authorship
-                sem_seo::add_authorship();
-                
+        // display google authorship
+        sem_seo::add_authorship();
+
  //               sem_seo::add_opengraph_meta();
                 
 	} # wp_head()
@@ -547,7 +552,7 @@ class sem_seo {
 		global $wp_the_query;
 		
 		if ( !$wp_the_query->posts )
-			return;
+			return "";
 		
 		$keywords = array();
 		$exclude = array();
@@ -580,7 +585,16 @@ class sem_seo {
 		return implode(', ', $keywords);
 	} # get_keywords()
 	
-	
+    /**
+   	 * get_the_excerpt_rss()
+   	 *
+   	 * @return string
+   	 **/
+    function get_the_excerpt_rss() {
+    	$output = get_the_excerpt();
+    	return apply_filters('the_excerpt_rss', $output);
+    }
+
 	/**
 	 * ob_start()
 	 *
@@ -678,7 +692,7 @@ class sem_seo {
 	 * @return array $options
 	 **/
 
-	function get_options() {
+	static function get_options() {
 		static $o;
 		
 		if ( !is_admin() && isset($o) )
@@ -796,7 +810,7 @@ class sem_seo {
 	 * @return object $contactmethods
 	 **/
         
-        function update_contactmethods( $contactmethods ) {
+    function update_contactmethods( $contactmethods ) {
 		// Add Google+
 		$contactmethods['googleplus'] = 'Google+';
 		// Add Twitter
@@ -816,45 +830,46 @@ class sem_seo {
 	 * @param void
 	 * @return void
 	 **/
-        function add_authorship() {
-            $gplus   = false;
-            $options = sem_seo::get_options();
+    function add_authorship() {
+        $gplus   = false;
+        $options = sem_seo::get_options();
 
-            if ( is_singular() ) {
-                    global $post;
-                    $gplus = get_the_author_meta( 'googleplus', $post->post_author );
-            } else if ( is_home() ) {
-                    if ( isset( $options['google_plus_author'] ) )
-                            $gplus = get_the_author_meta( 'googleplus', $options['google_plus_author'] );
+        if ( is_singular() ) {
+            global $post;
+            $gplus = get_the_author_meta( 'googleplus', $post->post_author );
+        } else if ( is_home() ) {
+            if ( isset( $options['google_plus_author'] ) )
+                $gplus = get_the_author_meta( 'googleplus', $options['google_plus_author'] );
+        }
+
+        if ( is_front_page() ) {
+            if ( isset( $options['google_plus_publisher'] ) && !empty( $options['google_plus_publisher'] ) ) {
+                echo '<link rel="publisher" href="' . esc_attr( $options['google_plus_publisher'] ) . '"/>' . "\n";
             }
+        }
 
-//		$gplus = apply_filters( 'wpseo_author_link', $gplus );
+        if ( $gplus )
+           echo '<link rel="author" href="' . $gplus . '"/>' . "\n";
 
-            if ( $gplus )
-                    echo '<link rel="author" href="' . $gplus . '"/>' . "\n";
+    } # add_authorship()
 
-            if ( is_front_page() && isset( $options['google_plus_publisher'] ) && !empty( $options['google_plus_publisher'] ) ) {
-                    echo '<link rel="publisher" href="' . esc_attr( $options['google_plus_publisher'] ) . '"/>' . "\n";
-            }        
-        } # add_authorship()
-                
                 
          /**
 	 * set_author_url()
 	 *
-	 * @param void
-	 * @return void
+	 * @param string
+	 * @return string
 	 **/
-        function set_author_url($url) {
- //           if (empty($url)) {
-            
-                $author_page_url = get_author_posts_url(get_the_author_meta( 'ID' ));
-                if (!empty($author_page_url)) {
-                    $url = $author_page_url;               
-                }
-//           }
-            
-            return $url;
+    function set_author_url($url) {
+//      if (empty($url)) {
+
+        $author_page_url = get_author_posts_url(get_the_author_meta( 'ID' ));
+        if (!empty($author_page_url)) {
+            $url = $author_page_url;
+        }
+//      }
+
+    return $url;
 	} # set_author_url()
 
         
@@ -876,27 +891,50 @@ class sem_seo {
 	 * @param void
 	 * @return void
 	 */       
-        function add_opengraph_meta() {
-            $og_title = '<meta property="og:title" content="' . esc_attr( get_the_title() ) . '" />' . "\n";
-            $og_type = '<meta property="og:type" content="website" />' . "\n";
-            $og_sitename ="<meta property='og:site_name' content='" . esc_attr( get_bloginfo( 'name' ) ) . "'/>\n";   
-            $og_url = '<meta property="og:url" content="' . sem_seo::get_canonical() . '" />' . "\n";    
-            $og_image = '';
-            $og_description = '';
-            
-            if ( is_singular() ) {
-                global $post;
-                setup_postdata( $post );
-                $og_type = '<meta property="og:type" content="article" />' . "\n";               
-                $og_url = '<meta property="og:url" content="' . get_permalink() . '" />' . "\n";
-                $og_description = '<meta property="og:description" content="' . esc_attr( get_the_excerpt() ) . '" />' . "\n";
-                if ( has_post_thumbnail() ) {
-                    $imgsrc = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'medium' );
-                    $og_image = '<meta property="og:image" content="' . $imgsrc[0] . '" />' . "\n";
-                }             
+    function add_opengraph_meta() {
+        $og_title = '<meta property="og:title" content="' . esc_attr( get_the_title() ) . '" />' . "\n";
+        $og_type = '<meta property="og:type" content="website" />' . "\n";
+        $og_sitename ="<meta property='og:site_name' content='" . esc_attr( get_bloginfo( 'name' ) ) . "'/>\n";
+        $og_url = '<meta property="og:url" content="' . sem_seo::get_canonical() . '" />' . "\n";
+        $og_image = '';
+        $og_description = '';
+
+        if ( is_singular() ) {
+            global $post;
+            setup_postdata( $post );
+            $og_type = '<meta property="og:type" content="article" />' . "\n";
+            $og_url = '<meta property="og:url" content="' . get_permalink() . '" />' . "\n";
+            $og_description = '<meta property="og:description" content="' . esc_attr( get_the_excerpt() ) . '" />' . "\n";
+            if ( has_post_thumbnail() ) {
+                $imgsrc = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'medium' );
+                $og_image = '<meta property="og:image" content="' . $imgsrc[0] . '" />' . "\n";
             }
-             echo $og_type . $og_title . $og_sitename . $og_url . $og_description . $og_image;
         }
+         echo $og_type . $og_title . $og_sitename . $og_url . $og_description . $og_image;
+    }
+
+    function is_home_posts_page() {
+        return ( is_home() && 'page' != get_option( 'show_on_front' ) );
+    }
+
+    /**
+     * Determine whether the current page is a static homepage.
+     *
+     * @return bool
+     */
+    function is_home_static_page() {
+        return ( is_front_page() && 'page' == get_option( 'show_on_front' ) && is_page( get_option( 'page_on_front' ) ) );
+    }
+
+    /**
+     * Determine whether this is the posts page, regardless of whether it's the frontpage or not.
+     *
+     * @return bool
+     */
+    function is_posts_page() {
+        return ( is_home() && 'page' == get_option( 'show_on_front' ) );
+    }
+
 } # sem_seo
         
 function seo_seo_admin() {

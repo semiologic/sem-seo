@@ -81,7 +81,7 @@ class sem_seo_admin {
 			. '</h2>' . "\n";
 		
 		echo '<h3>'
-			. __('Title &amp; Meta', 'sem-seo')
+			. __('Site Title &amp; Meta', 'sem-seo')
 			. '</h3>' . "\n";
 		
 		echo '<table class="form-table">' . "\n";
@@ -270,14 +270,15 @@ class sem_seo_admin {
 		
 		echo '</table>' . "\n";
 	} # entry_editor()
-	
-	
-	/**
-	 * save_entry()
-	 *
-	 * @param int $post_ID
-	 * @return void
-	 **/
+
+
+    /**
+     * save_entry()
+     *
+     * @param $post_id
+     * @internal param int $post_ID
+     * @return void
+     */
 
 	function save_entry($post_id) {
 		if ( !isset($_POST['sem_seo']) || wp_is_post_revision($post_id) || !current_user_can('edit_post', $post_id) )
@@ -305,20 +306,20 @@ class sem_seo_admin {
 	function get_fields($context) {
 		$fields = array(
 			'title' => array(
-					'label' => __('Title', 'sem-seo'),
-					'desc' => '<p>' . __('The title field lets you override the &lt;title&gt; tag of the blog\'s main page. It defaults to the site\'s tagline (<a href="options-general.php">Settings / General</a>)', 'sem-seo') . '</p>' . "\n",
+					'label' => __('Home Page Title', 'sem-seo'),
+					'desc' => '<p>' . __('The title field lets you override the &lt;title&gt; tag of the site\'s home page. It defaults to the site\'s tagline (<a href="options-general.php">Settings / General</a>)', 'sem-seo') . '</p>' . "\n",
 					),
 			'add_site_name' => array(
 					'label' => __('Site Name', 'sem-seo'),
 					'desc' => __('Append the name of the site to the title of each web page.', 'sem-seo'),
 					),
 			'keywords' => array(
-					'label' => __('Meta Keywords', 'sem-seo'),
-					'desc' => '<p>' . __('The meta keywords field lets you override the &lt;meta name=&quot;keywords&quot;&gt; tag of blog pages. Given the uselessness of this field, it is usually best left untouched. It defaults to the keywords (categories and tags) of every entry on the web page.', 'sem-seo') . '</p>' . "\n",
+					'label' => __('Home Page Meta Keywords', 'sem-seo'),
+					'desc' => '<p>' . __('The meta keywords field lets you override the &lt;meta name=&quot;keywords&quot;&gt; tag of the site\'s home page. Given the uselessness of this field, it is usually best left untouched. It defaults to the keywords (categories and tags) of every entry on the web page.', 'sem-seo') . '</p>' . "\n",
 					),
 			'description' => array(
-					'label' => __('Meta Description', 'sem-seo'),
-					'desc' => '<p>' . __('The meta description field lets you override the &lt;meta name=&quot;description&quot;&gt; tag of blog pages. Given the uselessness of this field, it is usually best left untouched. It defaults to the site\'s tagline (<a href="options-general.php">Settings / General</a>).', 'sem-seo') . '</p>' . "\n",
+					'label' => __('Home Page Meta Description', 'sem-seo'),
+					'desc' => '<p>' . __('The meta description field lets you override the &lt;meta name=&quot;description&quot;&gt; tag of the site\'s home page. Given the uselessness of this field, it is usually best left untouched. It defaults to the site\'s tagline (<a href="options-general.php">Settings / General</a>).', 'sem-seo') . '</p>' . "\n",
 					),
 			'categories' => array(
 					'label' => __('Category Archives', 'sem-seo'),
@@ -332,15 +333,15 @@ class sem_seo_admin {
 			'dates' => array(
 					'label' => __('Date Archives', 'sem-seo'),
 					),
-                        'google_plus_author' => array(
-					'label' => __('Google Plus Authorship', 'sem-seo'),
-                                        'desc' => '<p>' . __('Choose the user that should be used for the <code>rel="author"</code> on the blog homepage. Make sure the user has filled out his/her Google+ profile link on their profile page.', 'sem-seo') . '</p>' . "\n",
-					
-					),
-                        'google_plus_publisher' => array(
-					'label' => __('Google Publisher Page', 'sem-seo'),
-                                        'desc' => '<p>' . __('If you have a Google+ page for your business, add that URL here and link it on your Google+ page\'s about page.', 'sem-seo') . '</p>' . "\n",					
-					),   
+            'google_plus_author' => array(
+                    'label' => __('Google Plus Authorship', 'sem-seo'),
+                    'desc' => '<p>' . __('Choose the user that should be used for the <code>rel="author"</code> on the site\'s home page. Make sure the user has filled out his/her Google+ profile link on their profile page.', 'sem-seo') . '</p>' . "\n",
+
+            ),
+            'google_plus_publisher' => array(
+                    'label' => __('Google Publisher Page', 'sem-seo'),
+                    'desc' => '<p>' . __('If you have a Google+ page for your business, add that URL here and link it on your Google+ page\'s about page.', 'sem-seo') . '</p>' . "\n",
+            ),
 			);
              
                 

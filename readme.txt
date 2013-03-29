@@ -45,6 +45,11 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 2.2 =
+
+- Fix meta description tag not being set for home page
+- Clarified SEO->Settings field usage as being for the home page.
+
 = 2.1.1 =
 
 - Remove author link code with support now in Semiologic-Reloaded theme
