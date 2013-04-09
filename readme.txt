@@ -45,6 +45,12 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 2.3 =
+
+- Added prev and next adjacent canonical links for multi-page and series of pages, such as blog pages
+- Fixed duplicate title for multi-page blog post
+- Fixed setting of canonical link for blog page
+
 = 2.2 =
 
 - Fix meta description tag not being set for home page

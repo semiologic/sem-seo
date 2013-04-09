@@ -2,8 +2,8 @@
 /*
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
-Description: All-in-one SEO plugin for WordPress
-Version: 2.2
+Description: The "just works" SEO plugin for WordPress
+Version: 2.3
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -411,9 +411,9 @@ class sem_seo {
 		if ( $site_name )
 			$title = "$title | $site_name";
                 
-        $paged = get_query_var('paged');
-        if ( $paged  ) {
-            $title = "$title | Page $paged";
+        $page = (is_singular() ? get_query_var('page') : get_query_var('paged'));
+        if ( $page > 1 ) {
+            $title = "$title | Page $page";
         }
                 
 		return $title;
@@ -460,8 +460,6 @@ class sem_seo {
 				$description = get_term_field('description', get_query_var('cat'), 'category');
 			} elseif ( is_tag() ) {
 				$description = get_term_field('description', get_query_var('tag_id'), 'post_tag');
-//            } elseif ( is_single() || is_page() ) {
-//                $description = sem_seo::get_the_excerpt_rss();
 			} elseif ( is_home() || is_front_page() ) {
                 $description = get_option('blogdescription');
             }
@@ -479,7 +477,12 @@ class sem_seo {
         if ($canonical) {
 			echo '<link rel="canonical" href="' . esc_url($canonical) . '" />' . "\n";
 		}
-                
+
+        $links = sem_seo::get_adjacent_rel_links();
+        if (isset($links['prev']))
+            echo '<link rel="prev" href="' . esc_url($links['prev']) . '" />' . "\n";
+        if (isset($links['next']))
+            echo '<link rel="next" href="' . esc_url($links['next']) . '" />' . "\n";
         // display google authorship
         sem_seo::add_authorship();
 
@@ -488,60 +491,130 @@ class sem_seo {
 	} # wp_head()
 	
 
-    	/**
+    /**
 	 * get_canonical()
 	 *
+     * @param bool return_unpaged
 	 * @return string canonical url
 	 **/    
-        function get_canonical() {
-            
-            global $wp_the_query;
-            
-            $canonical = false;
-            
-            if ( is_singular() ) {
-                global $post;
-                if ( $post->ID != $wp_the_query->get_queried_object_id() )
-                    setup_postdata($wp_the_query->posts[0]);
-                $url = apply_filters('the_permalink', get_permalink($post->ID));
-                $page = get_query_var('page');
-                if ( $page ) {
-                    if ( !get_option('permalink_structure') )
-                        $url .= '&page=' . $page;
-                    else
-                        $url = trailingslashit($url) . user_trailingslashit($page, 'single_paged');
-                }
-                $canonical = $url;
+    function get_canonical($return_unpaged = false) {
 
-            } else {
-                if ( is_search() ) {
-                    $canonical = get_search_link();
-                } else if ( is_front_page() ) {
-                    $canonical = home_url( '/' );
-                } else if ( is_tax() || is_tag() || is_category() ) {
-                    $term      = get_queried_object();
-                    $canonical = get_term_link( $term, $term->taxonomy );
-                } else if ( function_exists( 'get_post_type_archive_link' ) && is_post_type_archive() ) {
-                    $canonical = get_post_type_archive_link( get_post_type() );
-                } else if ( is_author() ) {
-                    $canonical = get_author_posts_url( get_query_var( 'author' ), get_query_var( 'author_name' ) );
-                } else if ( is_archive() ) {
-                    if ( is_date() ) {
-                        if ( is_day() ) {
-                            $canonical = get_day_link( get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
-                        } else if ( is_month() ) {
-                            $canonical = get_month_link( get_query_var( 'year' ), get_query_var( 'monthnum' ) );
-                        } else if ( is_year() ) {
-                            $canonical = get_year_link( get_query_var( 'year' ) );
-                        }
+        global $wp_the_query;
+
+        $canonical = false;
+
+        if ( is_singular() ) {
+            global $post;
+            if ( $post->ID != $wp_the_query->get_queried_object_id() )
+                setup_postdata($wp_the_query->posts[0]);
+            $url = apply_filters('the_permalink', get_permalink($post->ID));
+            $page = get_query_var('page');
+            if ( $page > 1 && !$return_unpaged) {
+                if ( !get_option('permalink_structure') )
+                    $url .= '&page=' . $page;
+                else
+                    $url = trailingslashit($url) . user_trailingslashit($page, 'single_paged');
+            }
+            $canonical = $url;
+
+        } else {
+            if ( is_search() ) {
+                $canonical = get_search_link();
+            } else if ( is_front_page() ) {
+                $canonical = home_url( '/' );
+            } else if ( sem_seo::is_posts_page() ) {
+                $canonical = get_permalink( get_option( 'page_for_posts' ) );
+            } else if ( is_tax() || is_tag() || is_category() ) {
+                $term      = get_queried_object();
+                $canonical = get_term_link( $term, $term->taxonomy );
+            } else if ( function_exists( 'get_post_type_archive_link' ) && is_post_type_archive() ) {
+                $canonical = get_post_type_archive_link( get_post_type() );
+            } else if ( is_author() ) {
+                $canonical = get_author_posts_url( get_query_var( 'author' ), get_query_var( 'author_name' ) );
+            } else if ( is_archive() ) {
+                if ( is_date() ) {
+                    if ( is_day() ) {
+                        $canonical = get_day_link( get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+                    } else if ( is_month() ) {
+                        $canonical = get_month_link( get_query_var( 'year' ), get_query_var( 'monthnum' ) );
+                    } else if ( is_year() ) {
+                        $canonical = get_year_link( get_query_var( 'year' ) );
                     }
                 }
             }
 
-            return $canonical;
-        } # get_canonical()
-        
-        
+            if ( $canonical && $return_unpaged )
+         		return $canonical;
+
+            $page = get_query_var( 'paged' );
+            if ( $canonical && $page > 1 ) {
+                $canonical = sem_seo::add_paged_component( $canonical, $page );
+            }
+        }
+
+        return $canonical;
+    } # get_canonical()
+
+    /**
+	 * get_adjacent_rel_links()
+	 *
+	 * @return array links
+	 **/
+   function get_adjacent_rel_links() {
+   		global $wp_query;
+
+        $links = array();
+        $url = sem_seo::get_canonical(true);
+   		if ( !is_singular() ) {
+   			if ( $url ) {
+   				$paged = get_query_var( 'paged' );
+
+                if ( $paged == 0 )
+                    $paged = 1;
+
+   				if ( $paged > 1 )
+                    $links["prev"] = sem_seo::add_paged_component($url, $paged - 1);
+
+   				if ( $paged < $wp_query->max_num_pages )
+                    $links["next"] = sem_seo::add_paged_component($url, $paged + 1);
+   			}
+   		} else {
+            $page = get_query_var( 'page' );
+            if ($page == 0)
+                $page = 1;
+
+            $total_pages = substr_count($wp_query->post->post_content, '<!--nextpage-->') + 1;
+            if ( $page > 1 )
+                $links["prev"] = sem_seo::add_paged_component($url, $page - 1);
+
+            if ( $page < $total_pages )
+                $links["next"] = sem_seo::add_paged_component($url, $page + 1);
+        }
+
+       return $links;
+   	}
+
+    /**
+     * add_paged_arg()
+     *
+     * @param $canonical
+     * @param $page
+     * @internal param \canonical $string
+     * @return string canonical url
+     */
+
+    function add_paged_component($canonical, $page) {
+        global $wp_rewrite;
+        if ( $page > 1) {
+            if ( !$wp_rewrite->using_permalinks() ) {
+                $canonical = add_query_arg( 'paged', $page, $canonical );
+            } else {
+                $canonical = user_trailingslashit( trailingslashit( $canonical ) . trailingslashit( $wp_rewrite->pagination_base ) . $page );
+            }
+        }
+        return $canonical;
+    }
+
 	/**
 	 * get_keywords()
 	 *
