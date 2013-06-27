@@ -45,6 +45,11 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 2.3.1 =
+
+- Sitemap entries for archive pages (category, tags, author, date) had too many additional pages if a non-excerpt
+listing was set
+
 = 2.3 =
 
 - Added prev and next adjacent canonical links for multi-page and series of pages, such as blog pages

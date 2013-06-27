@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.3
+Version: 2.3.1
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -60,14 +60,30 @@ class sem_seo {
 		
 		$wp_the_query->parse_query($query_string);
 		
-		if ( is_feed() || !is_archive()
-			|| is_category() && !in_array($o['categories'], array('list', 'raw_list'))
-			|| is_tag() && !in_array($o['tags'], array('list', 'raw_list'))
-			|| is_author() && !in_array($o['authors'], array('list', 'raw_list'))
-			|| is_date() && !in_array($o['dates'], array('list', 'raw_list'))
-			)
+		if ( $wp_the_query->is_feed() || !$wp_the_query->is_archive() )
+            return $query_string;
+
+	    if ($wp_the_query->is_category() && !in_array($o['categories'], array('list', 'raw_list')))
+            return $query_string;
+
+			if ($wp_the_query->is_tag() && !in_array($o['tags'], array('list', 'raw_list')))
+                return $query_string;
+
+			if ($wp_the_query->is_author() && !in_array($o['authors'], array('list', 'raw_list')))
+                return $query_string;
+
+			if ($wp_the_query->is_date() && !in_array($o['dates'], array('list', 'raw_list')))
 			return $query_string;
-		
+
+/*
+	 		if ( is_feed() || !is_archive()
+	 			|| (is_category() && !in_array($o['categories'], array('list', 'raw_list')))
+	 			|| (is_tag() && !in_array($o['tags'], array('list', 'raw_list')))
+	 			|| (is_author() && !in_array($o['authors'], array('list', 'raw_list')))
+	 			|| (is_date() && !in_array($o['dates'], array('list', 'raw_list')))
+	 			)
+	 			return $query_string;
+	 */
 		parse_str($query_string, $args);
 		
 		if ( !isset($args['posts_per_page']) ) {
