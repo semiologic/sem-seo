@@ -6,7 +6,15 @@
  **/
 
 class sem_seo_admin {
-	/**
+    /**
+     * sem_seo_admin()
+     */
+    function sem_seo_admin() {
+        add_action('settings_page_seo', array($this, 'save_options'), 0);
+        add_action('save_post', array($this, 'save_entry'));
+    }
+
+    /**
 	 * save_options()
 	 *
 	 * @return void
@@ -25,12 +33,12 @@ class sem_seo_admin {
 			case 'title':
 			case 'keywords':
 			case 'description':
-                        case 'google_plus_publisher':
+            case 'google_plus_publisher':
 				$$field = trim(strip_tags(stripslashes($_POST[$field])));
 				break;
 			case 'google_plus_author':
-                                $$field = $_POST[$field];
-                                break;
+                $$field = $_POST[$field];
+                break;
 			default:
 				$$field = isset($_POST[$field]);
 				break;
@@ -56,7 +64,7 @@ class sem_seo_admin {
 			. '</p>' . "\n"
 			. '</div>' . "\n";
                 
-                do_action('update_option_sem_seo');
+        do_action('update_option_sem_seo');
 	} # save_options()
 	
 	
@@ -66,7 +74,7 @@ class sem_seo_admin {
 	 * @return void
 	 **/
 
-	function edit_options() {
+	static function edit_options() {
 		$options = sem_seo::get_options();
 		
 		echo '<div class="wrap">' . "\n"
@@ -234,7 +242,7 @@ class sem_seo_admin {
 	 * @return void
 	 **/
 
-	function entry_editor($post) {
+	static function entry_editor($post) {
 		echo '<table class="form-table">' . "\n";
 		
 		foreach ( sem_seo_admin::get_fields('meta') as $field => $details ) {
@@ -303,7 +311,7 @@ class sem_seo_admin {
 	 * @return array $fields
 	 **/
 
-	function get_fields($context) {
+	static function get_fields($context) {
 		$fields = array(
 			'title' => array(
 					'label' => __('Home Page Title', 'sem-seo'),
@@ -368,7 +376,7 @@ class sem_seo_admin {
 	 * @return void
 	 **/
 
-	function crash_course() {
+	static function crash_course() {
 		echo '<h3>'
 			. __('SEO Crash Course', 'sem-seo')
 			. '</h3>' ."\n";
@@ -546,8 +554,7 @@ class sem_seo_admin {
 
 
 } # sem_seo_admin
-        
-add_action('settings_page_seo', array('sem_seo_admin', 'save_options'), 0);
-add_action('save_post', array('sem_seo_admin', 'save_entry'));
+
+$sem_seo_admin = new sem_seo_admin();
 
 ?>
