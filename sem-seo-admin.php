@@ -9,7 +9,7 @@ class sem_seo_admin {
     /**
      * sem_seo_admin()
      */
-    function sem_seo_admin() {
+	public function __construct() {
         add_action('settings_page_seo', array($this, 'save_options'), 0);
         add_action('save_post', array($this, 'save_entry'));
     }
@@ -81,9 +81,7 @@ class sem_seo_admin {
 			. '<form method="post" action="">' . "\n";
 		
 		wp_nonce_field('sem_seo');
-		
-		screen_icon();
-		
+
 		echo '<h2>'
 			. __('SEO Settings', 'sem-seo')
 			. '</h2>' . "\n";
@@ -556,5 +554,3 @@ class sem_seo_admin {
 } # sem_seo_admin
 
 $sem_seo_admin = new sem_seo_admin();
-
-?>

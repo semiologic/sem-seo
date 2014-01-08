@@ -3,20 +3,19 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.4
+Version: 2.4.1
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
 Domain Path: /lang
+License: Dual licensed under the MIT and GPLv2 licenses
 */
 
 /*
 Terms of use
 ------------
 
-This software is copyright Mesoconcepts and is distributed under the terms of the Mesoconcepts license. In a nutshell, you may freely use it for any purpose, but may not redistribute it without written permission.
-
-http://www.mesoconcepts.com/license/
+This software is copyright Denis de Bernardy & Mike Koepke, and is distributed under the terms of the MIT and GPLv2 licenses.
 **/
 
 
@@ -33,7 +32,7 @@ class sem_seo {
     /**
      * sem_seo()
      */
-    function sem_seo() {
+	public function __construct() {
         add_action('wp', array($this, 'www_pref'), -10);
         if ( !is_admin() ) {
         	add_action('wp', array($this, 'paginated_post'), -10);
@@ -1000,5 +999,3 @@ foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'setting
 	add_action("load-$hook", 'seo_seo_admin');
 
 $sem_seo = new sem_seo();
-
-?>
