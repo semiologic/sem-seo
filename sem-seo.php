@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.4.1
+Version: 2.5 dev
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -19,9 +19,6 @@ This software is copyright Denis de Bernardy & Mike Koepke, and is distributed u
 **/
 
 
-load_plugin_textdomain('sem-seo', false, dirname(plugin_basename(__FILE__)) . '/lang');
-
-
 /**
  * sem_seo
  *
@@ -29,33 +26,120 @@ load_plugin_textdomain('sem-seo', false, dirname(plugin_basename(__FILE__)) . '/
  **/
 
 class sem_seo {
-    /**
-     * sem_seo()
-     */
+	/**
+	 * Plugin instance.
+	 *
+	 * @see get_instance()
+	 * @type object
+	 */
+	protected static $instance = NULL;
+
+	/**
+	 * URL to this plugin's directory.
+	 *
+	 * @type string
+	 */
+	public $plugin_url = '';
+
+	/**
+	 * Path to this plugin's directory.
+	 *
+	 * @type string
+	 */
+	public $plugin_path = '';
+
+	/**
+	 * Access this plugin’s working instance
+	 *
+	 * @wp-hook plugins_loaded
+	 * @return  object of this class
+	 */
+	public static function get_instance()
+	{
+		NULL === self::$instance and self::$instance = new self;
+
+		return self::$instance;
+	}
+
+
+	/**
+	 * Loads translation file.
+	 *
+	 * Accessible to other classes to load different language files (admin and
+	 * front-end for example).
+	 *
+	 * @wp-hook init
+	 * @param   string $domain
+	 * @return  void
+	 */
+	public function load_language( $domain )
+	{
+		load_plugin_textdomain(
+			$domain,
+			FALSE,
+			$this->plugin_path . 'lang'
+		);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 *
+	 */
+
 	public function __construct() {
-        add_action('wp', array($this, 'www_pref'), -10);
-        if ( !is_admin() ) {
-        	add_action('wp', array($this, 'paginated_post'), -10);
-        	add_action('wp', array($this, 'paginated_archive'), -10);
-        }
+		$this->plugin_url    = plugins_url( '/', __FILE__ );
+		$this->plugin_path   = plugin_dir_path( __FILE__ );
+		$this->load_language( 'sem-seo' );
 
-        add_filter('wp_title', array($this, 'wp_title'), 1000, 3);
-        add_action('wp_head', array($this, 'wp_head'), 0);
-
-        add_action('wp_head', array($this, 'ob_google_start'), 10000);
-        add_action('loop_start', array($this, 'google_start'), -10000);
-        add_action('loop_end', array($this, 'google_end'), 10000);
-
-        add_filter('query_string', array($this, 'archive_query_string'), 20);
-        add_action('loop_start', array($this, 'archive_start'), -1000);
-
-        add_action('admin_menu', array($this, 'admin_menu'));
-        add_action('admin_menu', array($this, 'meta_boxes'), 30);
-
-        add_filter('user_contactmethods', array($this, 'update_contactmethods'));
-
-        remove_action('wp_head', 'rel_canonical');
+		add_action( 'plugins_loaded', array ( $this, 'init' ) );
     }
+
+
+	/**
+	 * init()
+	 *
+	 * @return void
+	 **/
+
+	function init() {
+		// more stuff: register actions and filters
+		add_action('wp', array($this, 'www_pref'), -10);
+
+		if ( !is_admin() ) {
+			add_action('wp', array($this, 'paginated_post'), -10);
+			add_action('wp', array($this, 'paginated_archive'), -10);
+
+			add_filter('wp_title', array($this, 'wp_title'), 1000, 3);
+			add_action('wp_head', array($this, 'wp_head'), 0);
+
+			add_action('wp_head', array($this, 'ob_google_start'), 10000);
+			add_action('loop_start', array($this, 'google_start'), -10000);
+			add_action('loop_end', array($this, 'google_end'), 10000);
+
+			add_filter('query_string', array($this, 'archive_query_string'), 20);
+			add_action('loop_start', array($this, 'archive_start'), -1000);
+			remove_action('wp_head', 'rel_canonical');
+		}
+		else {
+			add_action('admin_menu', array($this, 'admin_menu'));
+			add_action('admin_menu', array($this, 'meta_boxes'), 30);
+
+			add_filter('user_contactmethods', array($this, 'update_contactmethods'));
+
+			foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'settings_page_seo') as $hook )
+				add_action("load-$hook", array($this, 'seo_seo_admin'));
+		}
+	}
+
+	/**
+	* seo_seo_admin()
+	*
+	* @return void
+	**/
+	function seo_seo_admin() {
+		include_once $this->plugin_path . '/sem-seo-admin.php';
+	}
 
     /**
 	 * archive_query_string()
@@ -932,17 +1016,18 @@ class sem_seo {
         $gplus   = false;
         $options = sem_seo::get_options();
 
-        if ( is_singular() ) {
-            global $post;
-            $gplus = get_the_author_meta( 'googleplus', $post->post_author );
-        } else if ( is_home() ) {
-            if ( isset( $options['google_plus_author'] ) )
-                $gplus = get_the_author_meta( 'googleplus', $options['google_plus_author'] );
+	    if ( is_singular() ) {
+			global $post;
+			$gplus = get_the_author_meta( 'googleplus', $post->post_author );
         }
+
+        if ( is_author() && get_query_var( 'author' ) ) {
+            $gplus = get_the_author_meta( 'googleplus', get_query_var( 'author' ) ) ;
+ 	    }
 
         if ( is_front_page() ) {
             if ( isset( $options['google_plus_publisher'] ) && !empty( $options['google_plus_publisher'] ) ) {
-                echo '<link rel="publisher" href="' . esc_attr( $options['google_plus_publisher'] ) . '"/>' . "\n";
+                echo '<link rel="publisher" href="' . esc_url( $options['google_plus_publisher'] ) . '"/>' . "\n";
             }
         }
 
@@ -990,12 +1075,5 @@ class sem_seo {
     }
 
 } # sem_seo
-        
-function seo_seo_admin() {
-	include_once dirname(__FILE__) . '/sem-seo-admin.php';
-}
 
-foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php', 'settings_page_seo') as $hook )
-	add_action("load-$hook", 'seo_seo_admin');
-
-$sem_seo = new sem_seo();
+$sem_seo = sem_seo::get_instance();

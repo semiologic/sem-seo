@@ -45,6 +45,11 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 2.5 =
+
+- Per Google guidance, authorship only applied to specific page/posts and author page, not to front page.
+- Code refactoring
+
 = 2.4.1 =
 
 - WP 3.8 compat
