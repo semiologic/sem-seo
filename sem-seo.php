@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.5
+Version: 2.6
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -583,10 +583,15 @@ class sem_seo {
 			if ( $$var )
 				echo '<meta name="' . $var . '" content="' . esc_attr($$var) . '" />' . "\n";
 		}
-		
+
+		$meta_robots = sem_seo::get_robots();
+		if ( $meta_robots ) {
+			echo '<meta name="robots" content="' . esc_attr( $meta_robots ) . '" />' . "\n";
+		}
+
         $canonical = sem_seo::get_canonical();
-        if ($canonical) {
-			echo '<link rel="canonical" href="' . esc_url($canonical) . '" />' . "\n";
+        if ( $canonical ) {
+			echo '<link rel="canonical" href="' . esc_url( $canonical ) . '" />' . "\n";
 		}
 
         $links = sem_seo::get_adjacent_rel_links();
@@ -663,6 +668,28 @@ class sem_seo {
 
         return $canonical;
     } # get_canonical()
+
+
+	/**
+	* get_robots()
+	*
+	* @return string
+	**/
+ function get_robots() {
+
+	 $meta_robots = '';
+
+     if  ( is_search() || is_tag() || is_author() || is_date() || is_404() ) {
+	     $meta_robots = "noindex, follow";
+     }
+/*	 elseif ( is_category() ) {
+		 $meta_robots = "noindex, follow";
+    }
+*/
+
+     return $meta_robots;
+ } # get_robots()
+
 
     /**
 	 * get_adjacent_rel_links()
@@ -882,7 +909,7 @@ class sem_seo {
 		
 		$o = get_option('sem_seo');
 		                
-		if ( $o === false || isset($o['archives']) || !isset($o['google_plus_author']) )
+		if ( $o === false || !isset($o['google_plus_publisher']) )
 			$o = sem_seo::init_options();
 		
 		return $o;
@@ -897,7 +924,7 @@ class sem_seo {
 
 	function init_options() {
 		$o = get_option('sem_seo');
-		
+
 		$defaults = array(
 			'title' => '',
 			'keywords' => '',
@@ -907,47 +934,17 @@ class sem_seo {
 			'tags' => 'list',
 			'authors' => 'list',
 			'dates' => 'list',
-            'google_plus_publisher' => '',
-            'google_plus_author' => '0',
+	        'google_plus_publisher' => '',
+	        'google_plus_author' => '0',
 			);
-		
+
 		if ( !$o ) {
 			$o  = $defaults;
-		} elseif ( isset($o['archives']) ) {
-			$o = wp_parse_args($o, $defaults);
-			
-			if ( $o['archives'] ) {
-				$o['dates'] = 'list';
-				foreach ( array('category' => 'categories', 'tag' => 'tags') as $type => $types ) {
-					if ( $o[$type . '_excerpts'] )
-						$o[$types] = 'excerpts';
-					elseif ( $o[$type . '_dates'] )
-						$o[$types] = 'list';
-					elseif ( !$o[$type . '_dates'] )
-						$o[$types] = 'raw_list';
-				}
-				$o['authors'] = 'list';
-			} else {
-				$o['dates'] = false;
-				$o['categories'] = false;
-				$o['tags'] = false;
-				$o['authors'] = false;
-			}
-			
-			extract($o, EXTR_SKIP);
-			$o = compact(array_keys($defaults));
-        } elseif ( !isset($o['google_plus_author']) ) {
-            $o = wp_parse_args($o, $defaults);
-
-            $o['google_plus_publisher'] = '';
-            $o['google_plus_author'] = '0';
-                        
-			extract($o, EXTR_SKIP);
-			$o = compact(array_keys($defaults));                        
-        } else {
-			$o = $defaults;
 		}
-		
+		else {
+			$o = wp_parse_args($o, $defaults);
+		}
+
 		update_option('sem_seo', $o);
 		
 		return $o;
@@ -979,10 +976,10 @@ class sem_seo {
 
 	function meta_boxes() {
 		if ( current_user_can('edit_posts') )
-			add_meta_box('sem_seo_admin', __('Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'post');
+			add_meta_box( 'sem_seo_admin', __('SEO Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'post', 'advanced', 'high' );
 		
 		if ( current_user_can('edit_pages') )
-			add_meta_box('sem_seo_admin', __('Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'page');
+			add_meta_box( 'sem_seo_admin', __('SEO Title &amp; Meta', 'sem-seo'), array('sem_seo_admin', 'entry_editor'), 'page', 'advanced', 'high' );
 	} # meta_boxes()
         
    /**
@@ -1032,7 +1029,7 @@ class sem_seo {
         }
 
         if ( $gplus )
-           echo '<link rel="author" href="' . $gplus . '"/>' . "\n";
+           echo '<link rel="author" href="' . esc_url( $gplus ) . '"/>' . "\n";
 
     } # add_authorship()
 

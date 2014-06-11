@@ -82,17 +82,18 @@ class sem_seo_admin {
 		check_admin_referer('sem_seo');
 		
 		$meta_fields = array_keys(sem_seo_admin::get_fields('ext_meta'));
-		
+
 		foreach ( $meta_fields as $field ) {
 			switch ( $field ) {
 			case 'title':
 			case 'keywords':
 			case 'description':
-            case 'google_plus_publisher':
-				$$field = trim(strip_tags(stripslashes($_POST[$field])));
+				$data = sanitize_text_field( $_POST[$field] );
+				$$field = $data;
 				break;
 			case 'google_plus_author':
-                $$field = $_POST[$field];
+			case 'google_plus_publisher':
+                $$field = esc_url_raw( $_POST[$field] );
                 break;
 			default:
 				$$field = isset($_POST[$field]);
@@ -101,14 +102,14 @@ class sem_seo_admin {
 		}
 		
 		$archive_fields = array_keys(sem_seo_admin::get_fields('archives'));
-		
+
 		foreach ( $archive_fields as $field ) {
 			if ( in_array($_POST[$field], array('list', 'raw_list', 'excerpts')) )
 				$$field = $_POST[$field];
 			else
 				$$field = false;
 		}
-		
+
 		update_option('sem_seo', compact(array_merge($meta_fields, $archive_fields)));
 		
 		echo '<div class="updated">' . "\n"
@@ -214,7 +215,7 @@ class sem_seo_admin {
 			. '</h3>' . "\n";
 		
 		echo '<p>'
-			. __('The general idea here is to prevent archive pages from outperforming your blog posts. Pages with very similar content on a site get clustered (see the SEO crash course further down).', 'sem-seo')
+			. __('The general idea here is to prevent archive pages from outperforming your blog posts. Pages with very similar content on a site get clustered.', 'sem-seo')
 			. '</p>' . "\n";
 		
 		echo '<p>'
@@ -254,7 +255,10 @@ class sem_seo_admin {
 		}
 		
 		echo '</table>' . "\n";
-		
+
+
+		/* TODO:  add robots control  */
+
 		echo '<p class="submit">'
 			. '<input type="submit"'
 				. ' value="' . esc_attr(__('Save Changes', 'sem-seo')) . '"'
@@ -327,7 +331,7 @@ class sem_seo_admin {
 		extract($_POST['sem_seo']);
 		
 		foreach ( array_keys(sem_seo_admin::get_fields('meta')) as $field ) {
-			$$field = trim(strip_tags($$field));
+			$$field = sanitize_text_field( $$field );
 			if ( $$field )
 				update_post_meta($post_id, '_' . $field, $$field);
 			else
@@ -346,7 +350,7 @@ class sem_seo_admin {
 	static function get_fields($context) {
 		$fields = array(
 			'title' => array(
-					'label' => __('Home Page Title', 'sem-seo'),
+					'label' => __('Page Title', 'sem-seo'),
 					'desc' => '<p>' . __('The title field lets you override the &lt;title&gt; tag of the site\'s home page. It defaults to the site\'s tagline (<a href="options-general.php">Settings / General</a>)', 'sem-seo') . '</p>' . "\n",
 					),
 			'add_site_name' => array(
@@ -354,11 +358,11 @@ class sem_seo_admin {
 					'desc' => __('Append the name of the site to the title of each web page.', 'sem-seo'),
 					),
 			'keywords' => array(
-					'label' => __('Home Page Meta Keywords', 'sem-seo'),
+					'label' => __('Page Meta Keywords', 'sem-seo'),
 					'desc' => '<p>' . __('The meta keywords field lets you override the &lt;meta name=&quot;keywords&quot;&gt; tag of the site\'s home page. Given the uselessness of this field, it is usually best left untouched. It defaults to the keywords (categories and tags) of every entry on the web page.', 'sem-seo') . '</p>' . "\n",
 					),
 			'description' => array(
-					'label' => __('Home Page Meta Description', 'sem-seo'),
+					'label' => __('Page Meta Description', 'sem-seo'),
 					'desc' => '<p>' . __('The meta description field lets you override the &lt;meta name=&quot;description&quot;&gt; tag of the site\'s home page. Given the uselessness of this field, it is usually best left untouched. It defaults to the site\'s tagline (<a href="options-general.php">Settings / General</a>).', 'sem-seo') . '</p>' . "\n",
 					),
 			'categories' => array(
@@ -386,8 +390,11 @@ class sem_seo_admin {
 			foreach ( array('title', 'keywords', 'description') as $field )
 				$_fields[$field] = $fields[$field];
 		} elseif ( $context == 'ext_meta' ) {
-			foreach ( array('title', 'add_site_name', 'keywords', 'description', 'google_plus_publisher') as $field )
+			foreach ( array('title', 'add_site_name', 'keywords', 'description', 'google_plus_publisher') as $field ) {
 				$_fields[$field] = $fields[$field];
+				if ( isset( $fields[$field]['label'] ) )
+					$_fields[$field]['label'] = __('Home ', 'sem-seo') . $_fields[$field]['label'];
+			}
 		} elseif ( $context == 'archives' ) {
 			foreach ( array('categories', 'tags', 'authors', 'dates') as $field )
 				$_fields[$field] = $fields[$field];

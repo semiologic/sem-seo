@@ -45,6 +45,17 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 2.6 =
+
+- Archive type pages - author, date, tags and search and 404 pages are now set to 'noindex, follow' to removing indexing of these pages.
+  Category pages will continued to be indexed.
+- Tweak the Page and Post Title & Meta box.
+	 - Moved up higher on page editor.
+	 - Clarified purpose by changing to SEO Title & Meta
+	 - Removed incorrectly displayed 'Home' from field labels
+- Make sure field input is properly sanitized.
+- Fixed: Google Publisher entry was not being saved after change made in 2.5.
+
 = 2.5 =
 
 - Per Google guidance, authorship only applied to specific page/posts and author page, not to front page.
