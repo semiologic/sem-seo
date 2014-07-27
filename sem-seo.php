@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.6
+Version: 2.6.1
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -922,7 +922,7 @@ class sem_seo {
 	 * @return array $options
 	 **/
 
-	function init_options() {
+	static function init_options() {
 		$o = get_option('sem_seo');
 
 		$defaults = array(

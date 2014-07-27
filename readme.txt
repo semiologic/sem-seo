@@ -45,6 +45,11 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+
+= 2.6.1 =
+
+- Fix some PHP 5.4+ strict warnings
+
 = 2.6 =
 
 - Archive type pages - author, date, tags and search and 404 pages are now set to 'noindex, follow' to removing indexing of these pages.
