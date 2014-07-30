@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.6.1
+Version: 2.6.2
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -1013,7 +1013,7 @@ class sem_seo {
         $gplus   = false;
         $options = sem_seo::get_options();
 
-	    if ( is_singular() ) {
+	    if ( is_singular() && !is_front_page() ) {
 			global $post;
 			$gplus = get_the_author_meta( 'googleplus', $post->post_author );
         }

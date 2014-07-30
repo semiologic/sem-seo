@@ -45,6 +45,9 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 2.6.2 =
+
+- Don't add Google Author is page is set for front page.
 
 = 2.6.1 =
 
