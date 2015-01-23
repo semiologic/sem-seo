@@ -3,7 +3,7 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.7
+Version: 2.8
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.getsemiologic.com
 Text Domain: sem-seo
@@ -689,10 +689,9 @@ class sem_seo {
      if  ( is_search() || is_tag() || is_author() || is_date() || is_404() ) {
 	     $meta_robots = "noindex, follow";
      }
-/*	 elseif ( is_category() ) {
+	 elseif ( is_category() ) {
 		 $meta_robots = "noindex, follow";
     }
-*/
 
      return $meta_robots;
  } # get_robots()

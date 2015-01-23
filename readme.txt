@@ -3,7 +3,7 @@ Contributors: Denis-de-Bernardy, Mike_Koepke
 Donate link: http://www.semiologic.com/partners/
 Tags: semiologic
 Requires at least: 3.0
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: trunk
 
 An SEO plugin for WordPress.
@@ -44,6 +44,11 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 
 == Change Log ==
+
+= 2.8 =
+
+- Make categories pages as 'noindex, follow'.  With 2.6 they were still 'follow, index'
+- WP 4.1 compat
 
 = 2.7 =
 
