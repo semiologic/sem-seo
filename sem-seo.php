@@ -3,9 +3,9 @@
 Plugin Name: Semiologic SEO
 Plugin URI: http://www.semiologic.com/software/sem-seo/
 Description: The "just works" SEO plugin for WordPress
-Version: 2.8
+Version: 2.9
 Author: Denis de Bernardy & Mike Koepke
-Author URI: http://www.getsemiologic.com
+Author URI: https://www.semiologic.com
 Text Domain: sem-seo
 Domain Path: /lang
 License: Dual licensed under the MIT and GPLv2 licenses
@@ -397,7 +397,7 @@ class sem_seo {
 			preg_match("|^([^/]+://[^/]+)|", $root, $root);
 			$root = end($root);
 			
-			wp_redirect($root . $_SERVER['REQUEST_URI'], 301);
+			wp_redirect($root . esc_url_raw($_SERVER['REQUEST_URI']), 301);
 			die;
 		}
 	} # www_pref()
@@ -606,8 +606,13 @@ class sem_seo {
             echo '<link rel="prev" href="' . esc_url($links['prev']) . '" />' . "\n";
         if (isset($links['next']))
             echo '<link rel="next" href="' . esc_url($links['next']) . '" />' . "\n";
+
         // display google authorship
         sem_seo::add_authorship();
+
+		// add google sitelinks json
+		// https://developers.google.com/webmasters/richsnippets/sitelinkssearch
+		sem_seo::add_sitelinkssearch();
                 
 	} # wp_head()
 	
@@ -735,6 +740,32 @@ class sem_seo {
 
        return $links;
    	}
+
+	/**
+	* add_sitelinkssearch()
+	*
+	* @return void
+	*
+	* @link https://developers.google.com/webmasters/richsnippets/sitelinkssearch
+	**/
+
+	function add_sitelinkssearch() {
+		if ( ! is_front_page() ) {
+			return;
+		}
+
+		$home_url = trailingslashit( home_url() );
+
+		$search_url = $home_url . '?s={search_term}';
+
+		echo '<script type="application/ld+json">{ "@context": "http://schema.org", '
+			. '"@type": "WebSite", '
+			. '"url": "' . $home_url
+			. '", "potentialAction": { "@type": "SearchAction", "target": "' . $search_url
+			.'", "query-input": "required name=search_term" } }'
+			. '</script>' . "\n";
+	}
+
 
     /**
      * add_paged_arg()

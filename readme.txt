@@ -1,9 +1,9 @@
 === Semiologic SEO ===
 Contributors: Denis-de-Bernardy, Mike_Koepke
-Donate link: http://www.semiologic.com/partners/
+Donate link: https://www.semiologic.com/donate/
 Tags: semiologic
 Requires at least: 3.0
-Tested up to: 4.1
+Tested up to: 4.3
 Stable tag: trunk
 
 An SEO plugin for WordPress.
@@ -34,7 +34,7 @@ One FAQ note however: meta keywords, which are useless, are dealt with automatic
 
 = Help Me! =
 
-The [Semiologic forum](http://forum.semiologic.com) is the best place to report issues.
+The [Semiologic Support Page](https://www.semiologic.com/support/) is the best place to report issues.
 
 
 == Installation ==
@@ -44,6 +44,12 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 
 == Change Log ==
+
+= 2.9 =
+
+- Add Google Sitelinks Search  - https://developers.google.com/webmasters/richsnippets/sitelinkssearch
+- WP 4.3 compat
+- Tested against PHP 5.6
 
 = 2.8 =
 
